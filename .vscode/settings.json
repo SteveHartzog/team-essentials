@@ -1,5 +1,39 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "editor.tabSize": 2,
+    "editor.formatOnType": false,
+    "editor.formatOnSave": true,
+    // TypeScript
+    "typescript.format.insertSpaceAfterCommaDelimiter": true,
+    "typescript.format.insertSpaceAfterSemicolonInForStatements": true,
+    "typescript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
+    "typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
+    "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
+    "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+    // JavaScript
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
+    // TSLint configuration
+    "tslint.enable": true,
+    // An additional rules directory
+    "tslint.rulesDirectory": "",
+    // Validate a file when there is only a default tslint configuration is found
+    "tslint.validateWithDefaultConfig": false,
+    // The path to the rules configuration file
+    "tslint.configFile": "",
+    // Control if TypeScript definition files should be ignored
+    "tslint.ignoreDefinitionFiles": true,
+    // Configure glob patterns of file paths to exclude from linting
+    "tslint.exclude": "",
+    // Run the linter on save (onSave) or on type (onType)
+    "tslint.run": "onType",
+    // A path added to NODE_PATH when resolving the tslint module.
+    "tslint.nodePath": "",
+    // Files
+    "files.trimTrailingWhitespace": true,
     "files.exclude": {
         "out": false // set this to true to hide the "out" folder with the compiled JS files
     },

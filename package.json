@@ -1,35 +1,69 @@
 {
-    "name": "newt",
-    "displayName": "newton-extension",
-    "description": "Newton integration with VS Code",
-    "version": "0.0.1",
-    "publisher": "SteveHartzog",
-    "engines": {
-        "vscode": "^1.5.0"
-    },
-    "categories": [
-        "Other"
+  "name": "te",
+  "displayName": "Team Essentials",
+  "description": "VS Code Extension the provides the essentials for any team",
+  "version": "0.0.2",
+  "author": "SteveHartzog",
+  "publisher": "SteveHartzog",
+  "engines": {
+    "vscode": "^1.7.1"
+  },
+  "categories": [
+    "Productivity"
+  ],
+  "activationEvents": [
+    "onCommand:extension.changeWindowsShell",
+    "onCommand:extension.filterExplorer",
+    "onCommand:extension.updateExtensions",
+    "onCommand:extension.debugStart",
+    "onCommand:extension.debugStop",
+    "workspaceContains:.vscode/team.json"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.changeWindowsShell",
+        "title": "Team Essentials: Change Windows Shell"
+      },
+      {
+        "command": "extension.filterExplorer",
+        "title": "Team Essentials: Filter Explorer"
+      },
+      {
+        "command": "extension.updateExtensions",
+        "title": "Team Essentials: Update Team Extensions"
+      }
     ],
-    "activationEvents": [
-        "onCommand:extension.sayHello"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        }]
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
-    },
-    "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
-    }
+    "keybindings": [
+      {
+        "command": "extension.debugStart",
+        "key": "F5",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.debugStop",
+        "key": "shift+F5",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.39",
+    "comment-json": "^1.1.3",
+    "lodash": "^4.17.2",
+    "run-in-terminal": "0.0.3"
+  }
 }

@@ -1,27 +1,26 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import { ExtensionContext, window, OutputChannel } from 'vscode';
+import { runInTerminal } from 'run-in-terminal';
+import Commands from './commands';
+import Keybindings from './keyBindings';
+
+let outputChannel: OutputChannel;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "newt" is now active!');
+    // Create default output channel
+    outputChannel = window.createOutputChannel('Team Essentials');
+    context.subscriptions.push(outputChannel);
 
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
+    // Register Commands
+    context.subscriptions.push(Commands.registerCommands(outputChannel));
 
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
-    });
-
-    context.subscriptions.push(disposable);
+    // Register Keybindings
+    context.subscriptions.push(Keybindings.registerKeybindings(outputChannel));
 }
 
 // this method is called when your extension is deactivated
