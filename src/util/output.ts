@@ -17,7 +17,7 @@ export default class Output {
 
   public static createStatusBar() {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
-    this.statusBarItem.command = 'teamEssentails.filterExplorer';
+    this.statusBarItem.command = 'teamEssentials.filterExplorer';
     this.statusBarItem.tooltip = "Click to change the explorer filter";
   }
 
