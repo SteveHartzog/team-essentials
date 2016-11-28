@@ -17,8 +17,8 @@ export default class Output {
 
   public static createStatusBar() {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
-    this.statusBarItem.command = 'extension.newtShow';
-    this.statusBarItem.tooltip = "Click to change the Newton file filter";
+    this.statusBarItem.command = 'teamEssentails.filterExplorer';
+    this.statusBarItem.tooltip = "Click to change the explorer filter";
   }
 
   public static updateStatusBar(status: string) {
