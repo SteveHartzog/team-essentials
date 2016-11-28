@@ -1,2 +1,4 @@
 out
 node_modules
+.vscode/settings.json
+.vscode/user.json
