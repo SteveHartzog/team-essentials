@@ -33,7 +33,7 @@
     "jsonValidation": [
       {
         "fileMatch": "team.json",
-        "url": "./src/schemas/team.json"
+        "url": "./team.json"
       }
     ],
     "commands": [
