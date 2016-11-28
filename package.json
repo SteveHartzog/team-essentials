@@ -6,11 +6,20 @@
   "author": "SteveHartzog",
   "publisher": "SteveHartzog",
   "license": "MITNFA",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SteveHartzog/team-essentials"
+  },
   "engines": {
     "vscode": "^1.7.1"
   },
   "categories": [
-    "Productivity"
+    "Productivity",
+    "Linters",
+    "Debuggers",
+    "Other",
+    "Keymaps"
   ],
   "activationEvents": [
     "onCommand:teamEssentials.changeWindowsShell",

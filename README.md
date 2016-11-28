@@ -1,35 +1,42 @@
+# Team Essentials
+  ![Team Essentials](./images/team-essentials.png)
+
+  Team essentials was designed to help team leads to define default settings, default extensions and allow easy configuration per developer within the constraints provided by the team lead. For instance required extensions are installed when the extension is installed or the project is opened for the first time.
+
 ## Features
 
-Newton!
+* **Change Workspace Shell**: You can change your workspace shell (Windows only currently) using a quickpick.
+  ![Change Workspace Shell](./images/change-shell.png)
 
-## Requirements
+* **Team Extension management**: You can define a list of required Team extensions (recommended extensions comes out of the box) that must be installed. These extensions are installed the first time the project is loaded with Team Essentials. You can also run it manually with a quickpick for required, recommend or all as options.
+  ![Required Extensions](./images/required-extensions.png)
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* **Team Explorer filter**: You can define different groups of files to be be excluded. For instance, one for nodejs backend and one for frontend devs. A `default` group will be applied in addition to group filters to all but the `admin` filter. Developers can then set their desired filter with a quickpick.
+  ![Filter Explorer](./images/filter-explorer.png)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### Custom files:
+* `.vscode/team.json` is where the team settings are included.
+* `.vscode/user.json` is where the local developers settings are saved.
 
-For example:
+### Default .vscode files:
+* `.vscode/settings.json` is where Team Essentials will write local workspace settings.
+* `.vscode/extensions.json` is where Team Essentials gets the list of recommended extensions.
 
 This extension contributes the following settings:
 
-* `myExtension.newtInit`: Initialize a newton project
-* `myExtension.newtShow`: Filters the source view.
+* `teamEssentials.changeWindowsShell`: Allows a quick way to set your project shell (in Windows).
+* `teamEssentials.filterExplorer`: Filters the source view, by developer instance to project defined filters.
+* `teamEssentials.updateExtensions`: Runs by default on first load of the project if a team.json has `required.extensions` key.
 
-## Known Issues
+### Debugging
+When you start a debugging session, the debug view and console are shown.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+When you stop a debugging session with `shift+f5`, the explorer view and output window are shown.
 
 ## Release Notes
 
-### 0.0.1
+### 0.2.0
 
-Initial release of newt!
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+First published version of Team Essentials.
