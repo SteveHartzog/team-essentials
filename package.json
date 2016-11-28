@@ -1,10 +1,11 @@
 {
-  "name": "te",
+  "name": "team-essentials",
   "displayName": "Team Essentials",
   "description": "VS Code Extension the provides the essentials for any team",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "author": "SteveHartzog",
   "publisher": "SteveHartzog",
+  "license": "MITNFA",
   "engines": {
     "vscode": "^1.7.1"
   },
@@ -12,37 +13,38 @@
     "Productivity"
   ],
   "activationEvents": [
-    "onCommand:extension.changeWindowsShell",
-    "onCommand:extension.filterExplorer",
-    "onCommand:extension.updateExtensions",
-    "onCommand:extension.debugStart",
-    "onCommand:extension.debugStop",
+    "onCommand:teamEssentials.changeWindowsShell",
+    "onCommand:teamEssentials.filterExplorer",
+    "onCommand:teamEssentials.updateExtensions",
+    "onDebug:teamEssentials.debugStart",
+    "onCommand:teamEssentials.debugStop",
     "workspaceContains:.vscode/team.json"
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": "team.json",
+        "url": "./src/schemas/team.json"
+      }
+    ],
     "commands": [
       {
-        "command": "extension.changeWindowsShell",
+        "command": "teamEssentials.changeWindowsShell",
         "title": "Team Essentials: Change Windows Shell"
       },
       {
-        "command": "extension.filterExplorer",
+        "command": "teamEssentials.filterExplorer",
         "title": "Team Essentials: Filter Explorer"
       },
       {
-        "command": "extension.updateExtensions",
+        "command": "teamEssentials.updateExtensions",
         "title": "Team Essentials: Update Team Extensions"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.debugStart",
-        "key": "F5",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "extension.debugStop",
+        "command": "teamEssentials.debugStop",
         "key": "shift+F5",
         "when": "editorTextFocus"
       }

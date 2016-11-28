@@ -1,0 +1,55 @@
+{
+  "title": "JSON schema for Team Essentials settings",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "defaultsDefinition": {
+      "properties": {
+        "defaults": {
+          "description": "Set any defaults you want set on the workspace settings file in here.",
+          "type": "object",
+          "$ref": "vscode://schemas/settings"
+        }
+      }
+    },
+    "explorerFiltersDefinition": {
+      "properties": {
+        "explorer.filters": {
+          "description": "Set any file exclusion, within a named group here.",
+          "type": "object"
+        }
+      }
+    },
+    "requiredExtensionsDefinition": {
+      "properties": {
+        "extensions.required": {
+          "description": "List of required team extensions.",
+          "type": "object"
+        }
+      }
+    },
+    "tasksDefinition": {
+      "properties": {
+        "tasks": {
+          "description": "Your team tasks are defined here.",
+          "type": "object",
+          "$ref": "tasks.json"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "anyOf": [
+    {
+      "$ref": "#/definitions/defaultsDefinition"
+    },
+    {
+      "$ref": "#/definitions/explorerFiltersDefinition"
+    },
+    {
+      "$ref": "#definitions/requiredExtensionsDefinition"
+    },
+    {
+      "$ref": "#definitions/tasksDefinition"
+    }
+  ]
+}

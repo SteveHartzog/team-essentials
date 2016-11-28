@@ -1,18 +1,17 @@
 import * as vscode from 'vscode';
 import out from './util/output';
 
-export default class KeyBindings {
-  public static registerKeybindings(outputChannel: vscode.OutputChannel): vscode.Disposable {
+export default class Keybindings {
+  constructor(private outputChannel: vscode.OutputChannel) { }
+
+  public register(): vscode.Disposable {
     return vscode.Disposable.from(
-      vscode.commands.registerCommand('extension.debugStart', () => this.debugStart(outputChannel)),
-      vscode.commands.registerCommand('extension.debugStop', () => this.debugStop(outputChannel))
+      vscode.commands.registerCommand('teamEssentials.debugStart', () => this.debugStart()),
+      vscode.commands.registerCommand('teamEssentials.debugStop', () => this.debugStop())
     );
   }
 
-  private static async debugStart(outputChannel: vscode.OutputChannel) {
-    outputChannel.show();
-    out.appendLine(outputChannel, 'starting: Debugger');
-
+  private async debugStart() {
     // Start client debugger
     // await vscode.commands.executeCommand('extension.auRun');
 
@@ -21,25 +20,19 @@ export default class KeyBindings {
 
     // Switch to Debug View
     vscode.commands.executeCommand('workbench.view.debug');
-
-    // Start server debugger
-    // let success = await vscode.commands.executeCommand('vscode.startDebug');
   }
 
-  private static async debugStop(outputChannel: vscode.OutputChannel) {
-    outputChannel.show();
-    out.appendLine(outputChannel, 'stopping: Debugger');
-
+  private async debugStop() {
     // Stop client debugger
     // await vscode.commands.executeCommand('workbench.action.tasks.terminate');
 
     // Stop server debugger
-    // let success = await vscode.commands.executeCommand('workbench.action.debug.stop');
-
-    // Hide Debug Console
-    vscode.commands.executeCommand('workbench.debug.action.toggleRepl');
+    await vscode.commands.executeCommand('workbench.action.debug.stop');
 
     // Switch Explorer View
     vscode.commands.executeCommand('workbench.view.explorer');
+
+    // Switch output to Team Essentials
+    this.outputChannel.show();
   }
 }
