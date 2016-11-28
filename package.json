@@ -15,7 +15,6 @@
     "vscode": "^1.7.1"
   },
   "categories": [
-    "Productivity",
     "Linters",
     "Debuggers",
     "Other",
