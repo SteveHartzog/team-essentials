@@ -1,5 +1,6 @@
-// Place your settings in this file to overwrite default and user settings.
 {
+  "defaults": {
+    // Editor
     "editor.tabSize": 2,
     "editor.formatOnType": false,
     "editor.formatOnSave": true,
@@ -34,11 +35,32 @@
     "tslint.nodePath": "",
     // Files
     "files.trimTrailingWhitespace": true,
-    "files.exclude": {
-        "out": false // set this to true to hide the "out" folder with the compiled JS files
-    },
     "search.exclude": {
         "out": true // set this to false to include "out" folder in search results
     },
     "typescript.tsdk": "./node_modules/typescript/lib" // we want to use the TS server from our node_modules folder to control its version
+  },
+  "explorer.filters": {
+    "default": {
+      // Config files
+      ".vscode": true,
+      ".vscodeignore": true,
+      ".gitignore": true,
+      "tsconfig.json": true,
+      "tslint.json": true,
+      // Build Dirs
+      "custom_types": true,
+      "package.json": true,
+      "README.md": true,
+      "out": "true",
+      // Package Dirs
+      "node_modules": true
+    },
+    "contributor": {  },
+    "admin": {
+      ".vscodeignore": true,
+      ".gitignore": true,
+      "out": true
+    }
+  }
 }

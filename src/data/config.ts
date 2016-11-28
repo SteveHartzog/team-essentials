@@ -42,7 +42,8 @@ export default class Config {
 
   get userConfig() {
     if (this.userConfigChanged) {
-      this.userConfigJson = json.getConfig(this.userConfigPath);
+      let defaultJson: JSON = JSON.parse('{}');
+      this.userConfigJson = json.getConfig(this.userConfigPath, defaultJson);
       this.userConfigChanged = false;
     }
     return this.userConfigJson;
