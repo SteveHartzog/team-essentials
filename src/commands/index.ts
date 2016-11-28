@@ -9,7 +9,6 @@ import exe from '../util/execute';
 import json from '../util/json';
 import out from '../util/output';
 import misc from '../util/misc';
-import tasks from './tasks';
 import Config from '../data/config';
 
 export default class Commands {
@@ -29,7 +28,6 @@ export default class Commands {
     this.changeWindowsShell = new ChangeWindowsShell(this.config);
     this.setup();
     process.on('teamConfig.changed', (data) => { this.filterExplorer.applyFilter(this.config.userConfig['explorerFilter']); });
-    // process.on('userConfig.changed', (data) => { ... });
 
     return vscode.Disposable.from(
       vscode.commands.registerCommand('teamEssentials.changeWindowsShell', () => this.changeWindowsShell.applyShell()),
