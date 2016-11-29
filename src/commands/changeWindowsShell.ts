@@ -4,7 +4,19 @@ import Config from '../data/config';
 
 export default class ChangeWindowsShell {
   constructor(private config: Config) {
-
+    if (this.config.userConfig.hasOwnProperty('terminal')) {
+      let chosenCli = this.config.userConfig['terminal'];
+      if (this.config.workspaceSettings.hasOwnProperty('terminal.integrated.shell.windows')) {
+        let currentCli = this.config.workspaceSettings['terminal.integrated.shell.windows'];
+        if (chosenCli !== currentCli) {
+          this.config.workspaceSettings['terminal.integrated.shell.windows'] = chosenCli;
+          this.config.saveWorkspaceSettings();
+        }
+      } else {
+        this.config.workspaceSettings['terminal.integrated.shell.windows'] = chosenCli;
+        this.config.saveWorkspaceSettings();
+      }
+    }
   }
 
   public applyShell() {

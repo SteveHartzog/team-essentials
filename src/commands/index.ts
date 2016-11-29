@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as os from 'os';
 import * as _ from 'lodash';
-import * as fs from 'fs';
-// import * as watchFixed from 'node-watch';
 import Extensions from './extensions';
 import FilterExplorer from './filterExplorer';
 import ChangeWindowsShell from './changeWindowsShell';
@@ -23,8 +21,10 @@ export default class Commands {
   constructor(private outputChannel: vscode.OutputChannel) { }
 
   public register(): vscode.Disposable {
-    this.setup();
-    this.startFileWatchers();
+    out.createStatusBar();
+    this.config = new Config();
+    this.confirmWorkspaceSettings();
+    this.initializeCommands();
 
     return vscode.Disposable.from(
       vscode.commands.registerCommand('teamEssentials.changeWindowsShell', () => this.changeWindowsShell.applyShell()),
@@ -33,45 +33,27 @@ export default class Commands {
     );
   }
 
-  private setup() {
-    this.config = new Config();
-    this.filterExplorer = new FilterExplorer(this.config);
-    this.extensions = new Extensions(this.outputChannel, this.config);
-    this.changeWindowsShell = new ChangeWindowsShell(this.config);
-
-    out.createStatusBar();
-    // Set Current User Filter if any
-    if (this.config.userConfig.hasOwnProperty('explorer.filter') && this.config.userConfig['explorer.filter'].length > 0) {
-      let explorerFilter = this.config.userConfig['explorer.filter'];
-      out.updateStatusBar('Filtering code source...');
-      this.filterExplorer.applyFilter(explorerFilter);
-      out.updateStatusBar(misc.titleCase(explorerFilter));
-    } else {
-      out.updateStatusBar('< Select Explorer Filter >');
-    }
-
-    // Ensure required extensions have been installed.
-    let needRequired = false;
-    if (!this.config.userConfig.hasOwnProperty('extensions.required.installed')) {
-      needRequired = true;
-    } else {
-      if (this.config.userConfig['extensions.required.installed'] === false) {
-        needRequired = true;
+  private confirmWorkspaceSettings() {
+    let defaultWorkspace: JSON = JSON.parse('{}');
+    if (!this.config.isEmpty('team')) {
+      if (this.config.teamConfig.hasOwnProperty('defaults')) {
+        defaultWorkspace['defaults'] = this.config.teamConfig['defaults'];
+      }
+      if (!this.config.isEmpty('user') && this.config.userConfig.hasOwnProperty('terminal')) {
+        defaultWorkspace['terminal'] = this.config.userConfig['terminal'];
+      }
+      if (!this.config.userConfig.hasOwnProperty('defaults.applied') || this.config.userConfig['defaults.applied'] === false) {
+        this.config.saveWorkspaceSettings(defaultWorkspace);
+        this.config.userConfig['defaults.applied'] = true;
+        this.config.saveUserConfig();
       }
     }
-    if (needRequired) {
-      this.extensions.installRequiredExtensions();
-      this.config.userConfig['extensions.required.installed'] = true;
-      this.config.saveUserConfig();
-    }
   }
 
-  private startFileWatchers() {
-    fs.watchFile(path.join(vscode.workspace.rootPath, '.vscode/team.json'), { interval: 500 }, (event, filename) => {
-      // Reload the new team config file
-      this.config.loadConfig('team');
-      // Reapply the filter
-      this.filterExplorer.applyFilter(this.config.userConfig['explorer.filter']);
-    });
+  private initializeCommands() {
+    this.filterExplorer = new FilterExplorer(this.config);
+    this.extensions = new Extensions(this.outputChannel, this.config);
+    this.changeWindowsShell = new ChangeWindowsShell(this.config);  
   }
+
 }

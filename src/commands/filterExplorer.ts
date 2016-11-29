@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 import Config from '../data/config';
 import json from '../util/json';
 import exe from '../util/execute';
@@ -10,6 +11,24 @@ import * as _ from 'lodash';
 
 export default class FilterExplorer {
   constructor(private config: Config) {
+    // Set Current User Filter if any
+    if (this.config.userConfig.hasOwnProperty('explorer.filter') && this.config.userConfig['explorer.filter'].length > 0) {
+      let explorerFilter = this.config.userConfig['explorer.filter'];
+      out.updateStatusBar('Filtering code source...');
+      this.applyFilter(explorerFilter);
+      out.updateStatusBar(misc.titleCase(explorerFilter));
+    } else {
+      out.updateStatusBar('< Select Explorer Filter >');
+    }
+
+    fs.watchFile(path.join(vscode.workspace.rootPath, '.vscode/team.json'), { interval: 500 }, (event, filename) => {
+      // Reload the new team config file
+      this.config.loadConfig('team');
+      // Reapply the filter
+      if (this.config.teamConfig.hasOwnProperty('explorer.filters')) {
+        this.applyFilter(this.config.userConfig['explorer.filter']);
+      }
+    });
   }
 
   public showQuickPick() {
@@ -48,7 +67,7 @@ export default class FilterExplorer {
     if (!this.config.workspaceSettings['files.exclude']) {
       this.config.workspaceSettings['files.exclude'] = {}
     }
-    if (filter.toLowerCase() === 'admin') {
+    if (filter && filter.toLowerCase() === 'admin') {
       // Truncate files.exclude
       this.config.workspaceSettings['files.exclude'] = {};
       // for (let prop in this.config.workspaceSettings['files.exclude']) {
@@ -65,7 +84,7 @@ export default class FilterExplorer {
 
       for (let explorerFilter in this.config.teamConfig['explorer.filters']) {
         if (explorerFilter !== 'admin' && explorerFilter !== 'default') {
-          if (explorerFilter === filter.toLowerCase()) {
+          if (filter && explorerFilter === filter.toLowerCase()) {
             for (let exclude in this.config.teamConfig['explorer.filters'][explorerFilter.toLowerCase()]) {
               if (typeof this.config.teamConfig['explorer.filters'][explorerFilter.toLowerCase()][exclude] === 'boolean') {
                 this.config.workspaceSettings['files.exclude'][exclude] = true;

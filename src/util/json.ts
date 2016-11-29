@@ -3,10 +3,11 @@ import * as json5 from 'comment-json';
 
 export default class json {
   public static getConfig(filePath: string, defaultJson?: JSON): JSON {
+    defaultJson = defaultJson ? json5.parse(defaultJson) : json5.parse('{}');
     try {
       let data = fs.readFileSync(filePath, "utf8");
       if (data.length === 0) {
-        return json5.parse(defaultJson);
+        return defaultJson;
       } else {
         return json5.parse(data, null, true);
       }

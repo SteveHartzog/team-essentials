@@ -11,7 +11,20 @@ export default class Extensions {
   private static extensionsConfig: JSON;
 
   constructor(private outputChannel: vscode.OutputChannel, private config: Config) {
-
+    // Ensure required extensions have been installed.
+    let needRequired = false;
+    if (!this.config.userConfig.hasOwnProperty('extensions.required.installed')) {
+      needRequired = true;
+    } else {
+      if (this.config.userConfig['extensions.required.installed'] === false) {
+        needRequired = true;
+      }
+    }
+    if (needRequired) {
+      this.installRequiredExtensions();
+      this.config.userConfig['extensions.required.installed'] = true;
+      this.config.saveUserConfig();
+    }
   }
 
   public updateExtensions() {

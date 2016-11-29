@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 import json from '../util/json';
 
 export default class Config {
@@ -13,58 +14,110 @@ export default class Config {
   private extensionsConfigJson: JSON;
 
   constructor() {
-    this.loadConfig('workspace');
-    if (this.workspaceSettingsJson === undefined) {
-      this.loadConfig('team');
-      let defaults = (this.teamConfig)['defaults'];
-      if (this.userConfig.hasOwnProperty('terminal')) {
-        defaults.terminal = this.userConfig['terminal'];
-        this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath, defaults);
-        this.saveWorkspaceSettings();
-      }
+    let vsCodeDirectoryPath = path.join(vscode.workspace.rootPath, '.vscode'); 
+    if (!fs.existsSync(vsCodeDirectoryPath)) {
+      fs.mkdirSync(vsCodeDirectoryPath);
     }
   }
 
   get userConfig() {
-    if (this.userConfigJson === undefined) {
-      this.userConfigJson = json.getConfig(this.userConfigPath);
+    if (typeof this.userConfigJson === 'undefined') {
+      this.loadConfig('user');
     }
     return this.userConfigJson;
   }
 
   get teamConfig() {
-    if (this.teamConfigJson === undefined) {
-      this.teamConfigJson = json.getConfig(this.teamConfigPath);
+    if (typeof this.userConfigJson === 'undefined') {
+      this.loadConfig('team');
     }
     return this.teamConfigJson;
   }
 
   get workspaceSettings() {
-    if (this.workspaceSettingsJson === undefined) {
-      this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath);
+    if (typeof this.workspaceSettingsJson === 'undefined') {
+      this.loadConfig('workspace');
     }
     return this.workspaceSettingsJson;
   }
 
   get extensionsConfig() {
-    if (this.extensionsConfigJson === undefined) {
-      this.extensionsConfigJson = json.getConfig(path.join(vscode.workspace.rootPath, '.vscode/extensions.json'));
+    if (typeof this.extensionsConfigJson === 'undefined') {
+      this.loadConfig('extensions');
     }
     return this.extensionsConfigJson;
   }
 
-  public loadConfig(config: string) {
+  public isEmpty(config: string) {
+    let obj;
+    switch (config) {
+      case 'team':
+        obj = this.teamConfig;
+        break;
+      case 'workspace':
+        obj = this.workspaceSettings;
+        break;
+      case 'user':
+        obj = this.userConfig;
+        break;
+      case 'extensions':
+        obj = this.extensionsConfig;
+        break;
+      default:
+        return true;
+    }
+    for(var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public loadConfig(config: string, defaults?: JSON) {
     switch (config) {
       case 'team':
         this.teamConfigJson = json.getConfig(this.teamConfigPath);
+        if (this.teamConfigJson === undefined) {      
+          if (defaults) {
+            this.teamConfigJson = defaults;
+          } else {
+            this.teamConfigJson = JSON.parse('{}');
+          }
+        }
         break;
 
       case 'user':
         this.userConfigJson = json.getConfig(this.userConfigPath);
+        if (this.userConfigJson === undefined) {
+          if (defaults) {
+            this.userConfigJson = defaults;
+            this.saveUserConfig();
+          } else {
+            this.userConfigJson = JSON.parse('{}');
+          }
+        }
         break;
 
       case 'workspace':
         this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath);
+        if (this.workspaceSettingsJson === undefined) {
+          if (defaults) {
+            this.workspaceSettingsJson = defaults;
+            this.saveWorkspaceSettings();
+          } else {
+            this.workspaceSettingsJson = JSON.parse('{}');
+          }
+        }
+      case 'extensions':
+        this.extensionsConfigJson = json.getConfig(this.extensionsConfigPath);
+        if (this.extensionsConfigJson === undefined) {
+          if (defaults) {
+            this.extensionsConfigJson = defaults;
+          } else {
+            this.extensionsConfigJson = JSON.parse('{}');
+          }
+        }
         break;
     }
   }
@@ -73,7 +126,12 @@ export default class Config {
     json.writeFile(this.userConfigPath, json.stringify(this.userConfigJson));
   }
 
-  public saveWorkspaceSettings() {
-    json.writeFile(this.workspaceSettingsPath, json.stringify(this.workspaceSettingsJson));
+  public saveWorkspaceSettings(overrideJson?: JSON) {
+    if (overrideJson) {
+      json.writeFile(this.workspaceSettingsPath, json.stringify(overrideJson));
+      this.workspaceSettingsJson = overrideJson;  
+    } else {
+      json.writeFile(this.workspaceSettingsPath, json.stringify(this.workspaceSettingsJson));
+    }
   }
 }
