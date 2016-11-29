@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as fs from 'fs';
 import json from '../util/json';
-import * as events from 'events';
 
 export default class Config {
   private teamConfigPath: string = path.join(vscode.workspace.rootPath, '.vscode/team.json');
@@ -12,69 +10,63 @@ export default class Config {
   private teamConfigJson: JSON;
   private userConfigJson: JSON;
   private workspaceSettingsJson: JSON;
-  private userSettingsJson: JSON;
   private extensionsConfigJson: JSON;
-  private teamConfigChanged: boolean = true;
-  private userConfigChanged: boolean = true;
-  private extensionsConfigChanged: boolean = true;
-  private userSettingsChanged: boolean = true;
-  private workspaceSettingsChanged: boolean = true;
 
   constructor() {
-    // start watching our config files for changes
-    fs.watch(path.join(vscode.workspace.rootPath, '.vscode'), function (event, filename) {
-      if (event === 'change') {
-        switch (filename) {
-          case this.userConfigPath:
-            this.userConfigChanged = true;
-            this.userConfig();
-            process.emit('userConfig.changed');
-            break;
-          case this.teamConfigPath:
-            this.teamConfigChanged = true;
-            this.teamConfig();
-            process.emit('teamConfig.changed');
-            break;
-        }
+    this.loadConfig('workspace');
+    if (this.workspaceSettingsJson === undefined) {
+      this.loadConfig('team');
+      let defaults = (this.teamConfig)['defaults'];
+      if (this.userConfig.hasOwnProperty('terminal')) {
+        defaults.terminal = this.userConfig['terminal'];
+        this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath, defaults);
+        this.saveWorkspaceSettings();
       }
-    });
+    }
   }
 
   get userConfig() {
-    if (this.userConfigChanged) {
-      let defaultJson: JSON = JSON.parse('{}');
-      this.userConfigJson = json.getConfig(this.userConfigPath, defaultJson);
-      this.userConfigChanged = false;
+    if (this.userConfigJson === undefined) {
+      this.userConfigJson = json.getConfig(this.userConfigPath);
     }
     return this.userConfigJson;
   }
 
   get teamConfig() {
-    if (this.teamConfigChanged) {
+    if (this.teamConfigJson === undefined) {
       this.teamConfigJson = json.getConfig(this.teamConfigPath);
-      this.teamConfigChanged = false;
     }
     return this.teamConfigJson;
   }
 
   get workspaceSettings() {
-    if (this.workspaceSettingsChanged) {
-      let defaults = this.teamConfig['defaults'];
-      if (this.userConfig.hasOwnProperty('terminal')) {
-        defaults.terminal = this.userConfig['terminal'];
-      }
-      this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath, defaults);
-      this.workspaceSettingsChanged = false;
+    if (this.workspaceSettingsJson === undefined) {
+      this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath);
     }
     return this.workspaceSettingsJson;
   }
 
   get extensionsConfig() {
-    if (this.extensionsConfigChanged) {
+    if (this.extensionsConfigJson === undefined) {
       this.extensionsConfigJson = json.getConfig(path.join(vscode.workspace.rootPath, '.vscode/extensions.json'));
-      this.extensionsConfigChanged = false;
     }
     return this.extensionsConfigJson;
+  }
+
+  public loadConfig(config: string) {
+    switch (config) {
+      case 'team':
+        this.teamConfigJson = json.getConfig(this.teamConfigPath);
+        break;
+
+      case 'user':
+        this.userConfigJson = json.getConfig(this.userConfigPath);
+        break;
+
+      case 'workspace':
+        this.workspaceSettingsJson = json.getConfig(this.workspaceSettingsPath);
+        break;
+    }
   }
 
   public saveUserConfig() {

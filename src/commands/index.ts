@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as os from 'os';
 import * as _ from 'lodash';
+import * as fs from 'fs';
+// import * as watchFixed from 'node-watch';
 import Extensions from './extensions';
 import FilterExplorer from './filterExplorer';
 import ChangeWindowsShell from './changeWindowsShell';
@@ -16,18 +18,13 @@ export default class Commands {
   private filterExplorer: FilterExplorer;
   private extensions: Extensions;
   private config: Config;
+  private fsTimeout: NodeJS.Timer = null;
 
   constructor(private outputChannel: vscode.OutputChannel) { }
 
   public register(): vscode.Disposable {
-
-    // Initialize values
-    this.config = new Config();
-    this.filterExplorer = new FilterExplorer(this.config);
-    this.extensions = new Extensions(this.outputChannel, this.config);
-    this.changeWindowsShell = new ChangeWindowsShell(this.config);
     this.setup();
-    process.on('teamConfig.changed', (data) => { this.filterExplorer.applyFilter(this.config.userConfig['explorerFilter']); });
+    this.startFileWatchers();
 
     return vscode.Disposable.from(
       vscode.commands.registerCommand('teamEssentials.changeWindowsShell', () => this.changeWindowsShell.applyShell()),
@@ -37,6 +34,11 @@ export default class Commands {
   }
 
   private setup() {
+    this.config = new Config();
+    this.filterExplorer = new FilterExplorer(this.config);
+    this.extensions = new Extensions(this.outputChannel, this.config);
+    this.changeWindowsShell = new ChangeWindowsShell(this.config);
+
     out.createStatusBar();
     // Set Current User Filter if any
     if (this.config.userConfig.hasOwnProperty('explorer.filter') && this.config.userConfig['explorer.filter'].length > 0) {
@@ -62,5 +64,14 @@ export default class Commands {
       this.config.userConfig['extensions.required.installed'] = true;
       this.config.saveUserConfig();
     }
+  }
+
+  private startFileWatchers() {
+    fs.watchFile(path.join(vscode.workspace.rootPath, '.vscode/team.json'), { interval: 500 }, (event, filename) => {
+      // Reload the new team config file
+      this.config.loadConfig('team');
+      // Reapply the filter
+      this.filterExplorer.applyFilter(this.config.userConfig['explorer.filter']);
+    });
   }
 }

@@ -49,28 +49,18 @@ export default class FilterExplorer {
       this.config.workspaceSettings['files.exclude'] = {}
     }
     if (filter.toLowerCase() === 'admin') {
-      for (let prop in this.config.workspaceSettings['files.exclude']) {
-        this.config.workspaceSettings['files.exclude'][prop] = false;
-      }
+      // Truncate files.exclude
+      this.config.workspaceSettings['files.exclude'] = {};
+      // for (let prop in this.config.workspaceSettings['files.exclude']) {
+      //   this.config.workspaceSettings['files.exclude'][prop] = false;
+      // }
       for (let exclude in this.config.teamConfig['explorer.filters']['admin']) {
-        if (typeof this.config.teamConfig['explorer.filters']['default'][exclude] === 'boolean') {
-          this.config.workspaceSettings['files.exclude'][exclude] = true;
-        } else {
-          this.config.workspaceSettings['files.exclude'][exclude] = {
-            "when": "$(basename).ts"
-          };
-        }
+        this.config.workspaceSettings['files.exclude'][exclude] = this.config.teamConfig['explorer.filters']['admin'][exclude];
       }
     } else {
       // Set Defaults
       for (let exclude in this.config.teamConfig['explorer.filters']['default']) {
-        if (typeof this.config.teamConfig['explorer.filters']['default'][exclude] === 'boolean') {
-          this.config.workspaceSettings['files.exclude'][exclude] = true;
-        } else {
-          this.config.workspaceSettings['files.exclude'][exclude] = {
-            "when": "$(basename).ts"
-          };
-        }
+        this.config.workspaceSettings['files.exclude'][exclude] = this.config.teamConfig['explorer.filters']['default'][exclude];
       }
 
       for (let explorerFilter in this.config.teamConfig['explorer.filters']) {
