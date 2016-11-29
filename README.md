@@ -5,6 +5,7 @@
 
 ## After installation steps:
 > This extension will not work until you follow these steps.
+
 1. Add `.vscode/user.json` and vscode's workspace settings (`.vscode/settings.json`) to `.gitignore` (and remove them if they are already in your git source). This will allow individual team member workspace settings to be modified without being committed to your project.
    - `terminal`: This sets the users' default shell and will be applied every time the project is loaded.
    - `extensions.required.installed`: This confirms that the required extensions have been installed.
