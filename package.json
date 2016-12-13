@@ -1,12 +1,13 @@
 {
   "name": "team-essentials",
   "displayName": "Team Essentials",
-  "description": "Provides the essentials tools for any team.",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": "SteveHartzog",
   "publisher": "SteveHartzog",
-  "license": "MITNFA",
-  "icon": "images/icon.png",
+  "description": "Provides the essentials tools for any team.",
+  "homepage": "https://github.com/SteveHartzog/team-essentials/blog/master/README.md",
+  "bugs": "https://github.com/SteveHartzog/team-essentials/issues",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",
     "url": "https://github.com/SteveHartzog/team-essentials"
@@ -14,11 +15,13 @@
   "engines": {
     "vscode": "^1.7.1"
   },
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#3B3738",
+    "theme": "dark"
+  },
   "categories": [
-    "Linters",
-    "Debuggers",
-    "Other",
-    "Keymaps"
+    "Other"
   ],
   "activationEvents": [
     "onCommand:teamEssentials.changeWindowsShell",
