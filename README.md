@@ -24,6 +24,7 @@
 ## **Change Workspace Shell**<br/><small>`teamEssentials.changeWindowsShell`</small><br/>
 You can change your workspace shell very easily with a simple selection. This setting is then persisted at `.vscode/user.json#terminal`.
 > Currently this works for windows users only.
+
 ![Change Workspace Shell](./images/change-shell.gif)
 
 <br/>
