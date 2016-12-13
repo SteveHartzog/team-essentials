@@ -25,7 +25,7 @@ export default class Execute {
       if (extension === undefined) {
         out.appendLine(outputChannel, `Not Found: ${task['extension']}`);
       } else {
-        await vscode.commands.executeCommand(`extension.${task['command']}`);
+        await vscode.commands.executeCommand(`${task['command']}`);
       }
     } else {
       await vscode.commands.executeCommand(task['command']);

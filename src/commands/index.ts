@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 import Extensions from './extensions';
 import FilterExplorer from './filterExplorer';
 import ChangeWindowsShell from './changeWindowsShell';
+import Debug from './debug';
+import Tasks from './tasks';
 import exe from '../util/execute';
 import json from '../util/json';
 import out from '../util/output';
@@ -14,6 +16,7 @@ import Config from '../data/config';
 export default class Commands {
   private changeWindowsShell: ChangeWindowsShell;
   private filterExplorer: FilterExplorer;
+  private debug: Debug;
   private extensions: Extensions;
   private config: Config;
   private fsTimeout: NodeJS.Timer = null;
@@ -28,8 +31,10 @@ export default class Commands {
 
     return vscode.Disposable.from(
       vscode.commands.registerCommand('teamEssentials.changeWindowsShell', () => this.changeWindowsShell.applyShell()),
+      vscode.commands.registerCommand('teamEssentials.debugStart', () => this.debug.start()),
+      vscode.commands.registerCommand('teamEssentials.debugStop', () => this.debug.stop()),
       vscode.commands.registerCommand('teamEssentials.filterExplorer', () => this.filterExplorer.showQuickPick()),
-      vscode.commands.registerCommand('teamEssentials.updateExtensions', () => this.extensions.updateExtensions()),
+      vscode.commands.registerCommand('teamEssentials.updateExtensions', () => this.extensions.updateExtensions())
     );
   }
 
@@ -51,9 +56,11 @@ export default class Commands {
   }
 
   private initializeCommands() {
-    this.filterExplorer = new FilterExplorer(this.config);
+    this.changeWindowsShell = new ChangeWindowsShell(this.config);
+    this.debug = new Debug(this.outputChannel, this.config);
     this.extensions = new Extensions(this.outputChannel, this.config);
-    this.changeWindowsShell = new ChangeWindowsShell(this.config);  
+    this.filterExplorer = new FilterExplorer(this.config);
+    this.changeWindowsShell = new ChangeWindowsShell(this.config);
   }
 
 }

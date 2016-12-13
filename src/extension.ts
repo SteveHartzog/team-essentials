@@ -4,7 +4,6 @@
 import { ExtensionContext, window, OutputChannel } from 'vscode';
 import { runInTerminal } from 'run-in-terminal';
 import Commands from './commands/index';
-import Keybindings from './keybindings';
 
 let outputChannel: OutputChannel;
 
@@ -16,13 +15,10 @@ export function activate(context: ExtensionContext) {
     outputChannel = window.createOutputChannel('Team Essentials');
     context.subscriptions.push(outputChannel);
     let commands = new Commands(outputChannel);
-    let keybindings = new Keybindings(outputChannel);
 
     // Register Commands
     context.subscriptions.push(commands.register());
 
-    // Register Keybindings
-    context.subscriptions.push(keybindings.register());
 }
 
 // this method is called when your extension is deactivated

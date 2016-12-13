@@ -52,7 +52,7 @@ export default class ChangeWindowsShell {
         this.config.saveUserConfig();
 
         // Notify user to restart VS Code
-        vscode.window.showInformationMessage('Restart Code to see your chosen integrated terminal.');
+        // vscode.window.showInformationMessage('Restart Code to see your chosen integrated terminal.');
       }
     });
   }

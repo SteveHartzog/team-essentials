@@ -6,9 +6,6 @@ import out from '../util/output';
 import Config from '../data/config';
 
 export default class Extensions {
-  private static outputChannel: vscode.OutputChannel;
-  private static teamConfig: JSON;
-  private static extensionsConfig: JSON;
 
   constructor(private outputChannel: vscode.OutputChannel, private config: Config) {
     // Ensure required extensions have been installed.
