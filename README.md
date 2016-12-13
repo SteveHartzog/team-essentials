@@ -1,7 +1,11 @@
 # Team Essentials
-  ![Team Essentials](./images/team-essentials.png)
+[![Version](http://vsmarketplacebadge.apphb.com/version/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
+[![Installs](http://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
+[![Ratings](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)
 
-  Team essentials was designed to help team leads define default settings, default extensions and allow easy configuration per developer within the constraints provided by the team lead. For instance: required extensions will be installed if defined when the project is opened for the first time.
+![Team Essentials](./images/team-essentials.png)
+
+Team essentials was designed to help team leads define default settings, default extensions and allow easy configuration per developer within the constraints provided by the team lead. For instance: required extensions will be installed if defined when the project is opened for the first time.
 
 ## After installation steps:
 > **NOTE**: This extension will not work until you follow these steps.
