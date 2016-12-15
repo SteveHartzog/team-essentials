@@ -3,7 +3,7 @@
 [![Installs](http://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
 [![Ratings](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)
 [![Dependency Status](https://david-dm.org/SteveHartzog/team-essentials.svg)](https://david-dm.org/SteveHartzog/team-essentials)
-[![devDependency Status](https://david-dm.org/typeorm/typeorm/dev-status.svg)](https://david-dm.org/SteveHartzog/team-essentials#info=devDependencies)
+[![devDependency Status](https://david-dm.org/SteveHartzog/team-essentials/dev-status.svg)](https://david-dm.org/SteveHartzog/team-essentials#info=devDependencies)
 
 ![Team Essentials](./images/team-essentials.png)
 
