@@ -28,8 +28,7 @@ When [submitting an issue](https://github.com/SteveHartzog/team-essentials/issue
 
 If you have an idea for a new feature or a suggestion how to improve an existing feature, let me know!
 
-1. Open a [new issue](https://github.com/SteveHartzog/team-essentials/issues/new) to describe your request
-2. Add a link to the issue on the Feature Requests [wiki page](https://github.com/SteveHartzog/team-essentials/wiki/Feature-Requests)
+Add your idea to the [Community Suggestions](https://github.com/SteveHartzog/team-essentials/wiki/Backlog) on the backlog.
 
 
 ## Pull Requests
