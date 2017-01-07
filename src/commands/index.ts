@@ -44,8 +44,8 @@ export default class Commands {
       if (this.config.teamConfig.hasOwnProperty('defaults')) {
         defaultWorkspace = this.config.teamConfig['defaults'];
       }
-      if (!this.config.isEmpty('user') && this.config.userConfig.hasOwnProperty('terminal')) {
-        defaultWorkspace['terminal'] = this.config.userConfig['terminal'];
+      if (!this.config.isEmpty('user') && this.config.userConfig.hasOwnProperty('terminal.integrated.shell.windows')) {
+        defaultWorkspace['terminal.integrated.shell.windows'] = this.config.userConfig['terminal.integrated.shell.windows'];
       }
       if (!this.config.userConfig.hasOwnProperty('defaults.applied') || this.config.userConfig['defaults.applied'] === false) {
         this.config.saveWorkspaceSettings(defaultWorkspace);
