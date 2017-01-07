@@ -126,10 +126,10 @@ export default class Config {
     json.writeFile(this.userConfigPath, json.stringify(this.userConfigJson));
   }
 
-  public saveWorkspaceSettings(overrideJson?: JSON) {
-    if (overrideJson) {
-      json.writeFile(this.workspaceSettingsPath, json.stringify(overrideJson));
-      this.workspaceSettingsJson = overrideJson;  
+  public saveWorkspaceSettings(objJson?: JSON) {
+    if (objJson) {
+      json.writeFile(this.workspaceSettingsPath, json.stringify(objJson));
+      this.workspaceSettingsJson = objJson;  
     } else {
       json.writeFile(this.workspaceSettingsPath, json.stringify(this.workspaceSettingsJson));
     }

@@ -42,7 +42,7 @@ export default class Commands {
     let defaultWorkspace: JSON = JSON.parse('{}');
     if (!this.config.isEmpty('team')) {
       if (this.config.teamConfig.hasOwnProperty('defaults')) {
-        defaultWorkspace['defaults'] = this.config.teamConfig['defaults'];
+        defaultWorkspace = this.config.teamConfig['defaults'];
       }
       if (!this.config.isEmpty('user') && this.config.userConfig.hasOwnProperty('terminal')) {
         defaultWorkspace['terminal'] = this.config.userConfig['terminal'];
