@@ -1,7 +1,7 @@
 {
     "name": "team-essentials",
     "displayName": "Team Essentials",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "author": "SteveHartzog",
     "publisher": "SteveHartzog",
     "description": "Provides the essentials tools for any team.",
@@ -27,6 +27,7 @@
         "onCommand:teamEssentials.changeWindowsShell",
         "onCommand:teamEssentials.filterExplorer",
         "onCommand:teamEssentials.updateExtensions",
+        "onCommand:teamEssentials.applyDefaultSettings",
         "onDebug:teamEssentials.debugStart",
         "onCommand:teamEssentials.debugStop",
         "workspaceContains:.vscode/team.json"
@@ -51,6 +52,10 @@
             {
                 "command": "teamEssentials.updateExtensions",
                 "title": "Team Essentials: Update Team Extensions"
+            },
+            {
+                "command": "teamEssentials.applyDefaultSettings",
+                "title": "Team Essentials: Apply Default Settings"
             }
         ],
         "keybindings": [

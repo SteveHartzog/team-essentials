@@ -26,7 +26,7 @@ export default class Commands {
   public register(): vscode.Disposable {
     out.createStatusBar();
     this.config = new Config();
-    this.confirmWorkspaceSettings();
+    this.applyTeamSettings();
     this.initializeCommands();
 
     return vscode.Disposable.from(
@@ -34,21 +34,31 @@ export default class Commands {
       vscode.commands.registerCommand('teamEssentials.debugStart', () => this.debug.start()),
       vscode.commands.registerCommand('teamEssentials.debugStop', () => this.debug.stop()),
       vscode.commands.registerCommand('teamEssentials.filterExplorer', () => this.filterExplorer.showQuickPick()),
+      vscode.commands.registerCommand('teamEssentials.applyDefaultSettings', () => this.applyTeamSettings(true)),
       vscode.commands.registerCommand('teamEssentials.updateExtensions', () => this.extensions.updateExtensions())
     );
   }
 
-  private confirmWorkspaceSettings() {
-    let defaultWorkspace: JSON = JSON.parse('{}');
+  private applyTeamSettings(reApply: boolean = false) {
+    let newSettings: JSON;
+    if (this.config.isEmpty('workspace')) {
+      newSettings = JSON.parse('{}');
+    } else {
+      newSettings = this.config.workspaceSettings;
+    }
+    
     if (!this.config.isEmpty('team')) {
       if (this.config.teamConfig.hasOwnProperty('defaults')) {
-        defaultWorkspace = this.config.teamConfig['defaults'];
+        // Team Defaults exist, add them to our newSettings
+        for (let setting in this.config.teamConfig['defaults']) {
+          newSettings[setting] = this.config.teamConfig['defaults'][setting];
+        }
       }
       if (!this.config.isEmpty('user') && this.config.userConfig.hasOwnProperty('terminal.integrated.shell.windows')) {
-        defaultWorkspace['terminal.integrated.shell.windows'] = this.config.userConfig['terminal.integrated.shell.windows'];
+        newSettings['terminal.integrated.shell.windows'] = this.config.userConfig['terminal.integrated.shell.windows'];
       }
-      if (!this.config.userConfig.hasOwnProperty('defaults.applied') || this.config.userConfig['defaults.applied'] === false) {
-        this.config.saveWorkspaceSettings(defaultWorkspace);
+      if (reApply || (!this.config.userConfig.hasOwnProperty('defaults.applied') || this.config.userConfig['defaults.applied'] === false)) {
+        this.config.saveWorkspaceSettings(newSettings);
         this.config.userConfig['defaults.applied'] = true;
         this.config.saveUserConfig();
       }

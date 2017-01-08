@@ -1,9 +1,11 @@
 # Change Log
 
+## 0.2.8 (January 8, 2017)
+  - Enhancement: Allow default settings to be reapplied (even if previously applied). ([@SteveHartzog](https://github.com/stevehartzog) in [#3](https://github.com/SteveHartzog/team-essentials/issues/3))
+
 ## 0.2.7 (January 7, 2017)
   - Fix: Team Default settings added incorrectly to \<project\>\\.vscode\\`settings.json`. ([@SteveHartzog](https://github.com/stevehartzog) in [#1](https://github.com/SteveHartzog/team-essentials/issues/1))
   - Fix: New users have default teriminal applied incorrectly. ([@SteveHartzog](https://github.com/stevehartzog) in [#4](https://github.com/SteveHartzog/team-essentials/issues/4))
-  - Enhancement: Allow default settings to be reapplied via a quickpick. ([@SteveHartzog](https://github.com/stevehartzog) in [#3](https://github.com/SteveHartzog/team-essentials/issues/3))
   - Simplified the `README.md` and moved the bulk of the documentation to the wiki, changes to `CHANGELOG.md`.
   - Added `CONTRIBUTING.md` to provide instructions for submitting issues and feature enhancements.
   - Added VSCode Marketplace & David Badges.
