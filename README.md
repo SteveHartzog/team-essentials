@@ -2,8 +2,6 @@
 [![Version](http://vsmarketplacebadge.apphb.com/version/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
 [![Installs](http://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
 [![Ratings](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)](https://vsmarketplacebadge.apphb.com/rating/SteveHartzog.team-essentials.svg)
-[![Dependency Status](https://david-dm.org/SteveHartzog/team-essentials.svg)](https://david-dm.org/SteveHartzog/team-essentials)
-[![devDependency Status](https://david-dm.org/SteveHartzog/team-essentials/dev-status.svg)](https://david-dm.org/SteveHartzog/team-essentials#info=devDependencies)
 
 ![Team Essentials](./images/team-essentials.png)
 
@@ -46,7 +44,7 @@ If you have any feature suggestions, or would like to contribute (I need all the
    .vscode/settings.json
    .vscode/user.json
    ```
-  
+
 2. Remove `.vscode/settings.json` from source control if it had been added previously.
 3. Create a `.vscode/team.json` to configure your teams' settings. See the [config page](https://github.com/SteveHartzog/team-essentials/wiki/Configuration) on the wiki for more information.
 

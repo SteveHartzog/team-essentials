@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.9 (February 6, 2017)
+  - Fix: Fix breaking change in vscode 1.9.0.  ([@SteveHartzog](https://github.com/stevehartzog) in [#5](https://github.com/SteveHartzog/team-essentials/issues/5))
+
 ## 0.2.8 (January 8, 2017)
   - Enhancement: Allow default settings to be reapplied (even if previously applied). ([@SteveHartzog](https://github.com/stevehartzog) in [#3](https://github.com/SteveHartzog/team-essentials/issues/3))
 

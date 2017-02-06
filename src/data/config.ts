@@ -1,28 +1,49 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 import json from '../util/json';
 
 export default class Config {
   private teamConfigPath: string = path.join(vscode.workspace.rootPath, '.vscode/team.json');
   private userConfigPath: string = path.join(vscode.workspace.rootPath, '.vscode/user.json');
+  private userSettingsPath: string;
   private workspaceSettingsPath: string = path.join(vscode.workspace.rootPath, '.vscode/settings.json');
   private extensionsConfigPath: string = path.join(vscode.workspace.rootPath, '.vscode/extensions.json');
   private teamConfigJson: JSON;
   private userConfigJson: JSON;
+  private userSettingsJson: JSON;
   private workspaceSettingsJson: JSON;
   private extensionsConfigJson: JSON;
 
   constructor() {
-    let vsCodeDirectoryPath = path.join(vscode.workspace.rootPath, '.vscode'); 
+    switch (os.platform()) {
+      case 'win32':
+        this.userSettingsPath = path.join(os.homedir(), 'AppData/Roaming/Code/User/settings.json');
+        break;
+      case 'darwin':
+        this.userSettingsPath = path.join(os.homedir(), 'Library/Application Support/Code/User/settings.json');
+        break;
+      case 'linux':
+        this.userSettingsPath = path.join(os.homedir(), '.config/Code/User/settings.json');
+        break;
+    }
+    let vsCodeDirectoryPath = path.join(vscode.workspace.rootPath, '.vscode');
     if (!fs.existsSync(vsCodeDirectoryPath)) {
       fs.mkdirSync(vsCodeDirectoryPath);
     }
   }
 
+  get userSettings() {
+    if (typeof this.userSettingsJson === 'undefined') {
+      this.loadConfig('userSettings');
+    }
+    return this.userSettingsJson;
+  }
+
   get userConfig() {
     if (typeof this.userConfigJson === 'undefined') {
-      this.loadConfig('user');
+      this.loadConfig('userConfig');
     }
     return this.userConfigJson;
   }
@@ -66,7 +87,7 @@ export default class Config {
       default:
         return true;
     }
-    for(var prop in obj) {
+    for (var prop in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, prop)) {
         return false;
       }
@@ -78,7 +99,7 @@ export default class Config {
     switch (config) {
       case 'team':
         this.teamConfigJson = json.getConfig(this.teamConfigPath);
-        if (this.teamConfigJson === undefined) {      
+        if (this.teamConfigJson === undefined) {
           if (defaults) {
             this.teamConfigJson = defaults;
           } else {
@@ -87,7 +108,7 @@ export default class Config {
         }
         break;
 
-      case 'user':
+      case 'userConfig':
         this.userConfigJson = json.getConfig(this.userConfigPath);
         if (this.userConfigJson === undefined) {
           if (defaults) {
@@ -95,6 +116,18 @@ export default class Config {
             this.saveUserConfig();
           } else {
             this.userConfigJson = JSON.parse('{}');
+          }
+        }
+        break;
+
+      case 'userSettings':
+        this.userSettingsJson = json.getConfig(this.userSettingsPath);
+        if (this.userSettingsJson === undefined) {
+          if (defaults) {
+            this.userSettingsJson = defaults;
+            this.saveUserSettings();
+          } else {
+            this.userSettingsJson = JSON.parse('{}');
           }
         }
         break;
@@ -126,10 +159,19 @@ export default class Config {
     json.writeFile(this.userConfigPath, json.stringify(this.userConfigJson));
   }
 
+  public saveUserSettings(objJson?: JSON) {
+    if (objJson) {
+      json.writeFile(this.userSettingsPath, json.stringify(objJson));
+      this.userSettingsJson = objJson;
+    } else {
+      json.writeFile(this.userSettingsPath, json.stringify(this.userSettingsJson));
+    }
+  }
+
   public saveWorkspaceSettings(objJson?: JSON) {
     if (objJson) {
       json.writeFile(this.workspaceSettingsPath, json.stringify(objJson));
-      this.workspaceSettingsJson = objJson;  
+      this.workspaceSettingsJson = objJson;
     } else {
       json.writeFile(this.workspaceSettingsPath, json.stringify(this.workspaceSettingsJson));
     }

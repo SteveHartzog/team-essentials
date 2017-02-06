@@ -4,17 +4,19 @@ import Config from '../data/config';
 
 export default class ChangeWindowsShell {
   constructor(private config: Config) {
-    if (this.config.userConfig.hasOwnProperty('terminal')) {
-      let chosenCli = this.config.userConfig['terminal'];
-      if (this.config.workspaceSettings.hasOwnProperty('terminal.integrated.shell.windows')) {
-        let currentCli = this.config.workspaceSettings['terminal.integrated.shell.windows'];
-        if (chosenCli !== currentCli) {
+    if (vscode.version < '1.9.0') {
+      if (this.config.userConfig.hasOwnProperty('terminal')) {
+        let chosenCli = this.config.userConfig['terminal'];
+        if (this.config.workspaceSettings.hasOwnProperty('terminal.integrated.shell.windows')) {
+          let currentCli = this.config.workspaceSettings['terminal.integrated.shell.windows'];
+          if (chosenCli !== currentCli) {
+            this.config.workspaceSettings['terminal.integrated.shell.windows'] = chosenCli;
+            this.config.saveWorkspaceSettings();
+          }
+        } else {
           this.config.workspaceSettings['terminal.integrated.shell.windows'] = chosenCli;
           this.config.saveWorkspaceSettings();
         }
-      } else {
-        this.config.workspaceSettings['terminal.integrated.shell.windows'] = chosenCli;
-        this.config.saveWorkspaceSettings();
       }
     }
   }
@@ -43,11 +45,15 @@ export default class ChangeWindowsShell {
           break;
       }
       if (cli.length > 0) {
-        // Save to user settings
-        this.config.workspaceSettings['terminal.integrated.shell.windows'] = cli;
-        this.config.saveWorkspaceSettings();
+        if (vscode.version < '1.9.0') {
+          this.config.workspaceSettings['terminal.integrated.shell.windows'] = cli;
+          this.config.saveWorkspaceSettings();
+        } else { // 1.9+
+          this.config.userSettings['terminal.integrated.shell.windows'] = cli;
+          this.config.saveUserSettings();
+        }
 
-        // Save to user saves
+        // Save to user config
         this.config.userConfig['terminal'] = cli;
         this.config.saveUserConfig();
 
