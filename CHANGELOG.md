@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.10 (March 6, 2017):
+  - Fix: Version comparison fix for 1.10+. ([@SteveHartzog](https://github.com/stevehartzog) in [#7](https://github.com/SteveHartzog/team-essentials/issues/7))
+
 ## 0.2.9 (February 6, 2017)
   - Fix: Fix breaking change in vscode 1.9.0.  ([@SteveHartzog](https://github.com/stevehartzog) in [#5](https://github.com/SteveHartzog/team-essentials/issues/5))
 
