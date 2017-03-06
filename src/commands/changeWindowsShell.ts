@@ -4,7 +4,13 @@ import Config from '../data/config';
 
 export default class ChangeWindowsShell {
   constructor(private config: Config) {
-    if (vscode.version < '1.9.0') {
+    let vscodeVersionArray = vscode.version.split('.');
+    let editorVersion = {
+      major: Number(vscodeVersionArray[0]),
+      minor: Number(vscodeVersionArray[1]),
+      build: Number(vscodeVersionArray[2])
+    }
+    if (editorVersion.major < 2 && editorVersion.minor < 9) {
       if (this.config.userConfig.hasOwnProperty('terminal')) {
         let chosenCli = this.config.userConfig['terminal'];
         if (this.config.workspaceSettings.hasOwnProperty('terminal.integrated.shell.windows')) {
