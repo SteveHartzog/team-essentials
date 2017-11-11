@@ -1,4 +1,11 @@
 out
 node_modules
+src/commands/tasks.ts
+src/commands/init.ts
+**/_*
+
+## Team Essentials ##
+#####################
 .vscode/settings.json
+.vscode/team-essentials/state.json
 .vscode/user.json

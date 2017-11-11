@@ -1,0 +1,23 @@
+{
+  "default": {
+    // Config files
+    ".vscode": true,
+    ".vscodeignore": true,
+    ".gitignore": true,
+    "tsconfig.json": true,
+    "tslint.json": true,
+    // Build Dirs
+    "custom_types": true,
+    "package.json": true,
+    "README.md": true,
+    "out": "true",
+    // Package Dirs
+    "node_modules": true
+  },
+  "contributor": {},
+  "admin": {
+    ".vscodeignore": true,
+    ".gitignore": true,
+    "out": true
+  }
+}

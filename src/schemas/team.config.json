@@ -1,0 +1,59 @@
+{
+  "title": "JSON schema for Team Essentials: Configuraiton Settings",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "teamEssentials": {
+      "type": "object",
+      "description": "Container for all `teamEssentials` configuration settings",
+      "properties": {
+        "statusbar.disable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disables the statusbar."
+        },
+        "statusbar.align": {
+          "type": "string",
+          "default": "left",
+          "description": "Specifies if the statusbar should be aligned 'left' or 'right'."
+        },
+        "statusbar.hideIcon": {
+          "type": "boolean",
+          "default": false,
+          "description": "Hides the icon for the filter on the statusbar."
+        },
+        "statusbar.icon": {
+          "type": "string",
+          "default": "search",
+          "description": "Set a custom icon from the octicon list @ https://octicons.github.com/."
+        },
+        "statusbar.priority": {
+          "type": "number",
+          "default": null,
+          "description": "Set a custom priority for the statusbar setting."
+        },
+        "debug.start.output": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *output* area."
+        },
+        "debug.start.explorer": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *explorer* area."
+        },
+        "debug.stop.output": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *output* area."
+        },
+        "debug.stop.explorer": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *explorer* area."
+        },
+        "debug.stop.terminatePreLaunchTask": {
+          "type": "boolean",
+          "default": true,
+          "description": "Configure if you wish to terminate the prelaunch task."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "JSON schema for Team Essentials: Explorer Filters",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "filters": {
+      "description": "Set any file exclusion, within a named filter group here.",
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

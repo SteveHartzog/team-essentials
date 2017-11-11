@@ -1,0 +1,15 @@
+{
+  "title": "JSON schema for Team Essentials: Required Extensions",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "required": {
+      "description": "List of extensions requirements. The identifier of an extension is always '${publisher}.${name}'. For example: 'msjsdiag.debugger-for-edge'.",
+      "type": "array"
+    },
+    "recommendations": {
+      "description": "List of extensions recommendations. The identifier of an extension is always '${publisher}.${name}'. For example: 'msjsdiag.debugger-for-edge'.",
+      "type": "array"
+    }
+  }
+}

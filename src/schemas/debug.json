@@ -1,0 +1,40 @@
+{
+  "title": "JSON schema for Team Essentials: Debug Configuration",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "start": {
+      "type": "object",
+      "description": "View Configuration for debug start.",
+      "properties": {
+        "output": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *output* area."
+        },
+        "explorer": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *explorer* area."
+        }
+      }
+    },
+    "stop": {
+      "type": "object",
+      "description": "View Configuration for debug start.",
+      "properties": {
+        "output": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *output* area."
+        },
+        "explorer": {
+          "type": "string",
+          "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *explorer* area."
+        },
+        "terminatePreLaunchTask": {
+          "type": "boolean",
+          "default": true,
+          "description": "Configure if you wish to terminate the prelaunch task."
+        }
+      }
+    }
+  }
+}
