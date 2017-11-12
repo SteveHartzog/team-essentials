@@ -22,9 +22,6 @@ Team Essentials helps you define a default environment for your team:
 
 If you have any feature suggestions, or would like to contribute (I need all the help I can get), please checkout the [Contributing Guidelines](https://github.com/SteveHartzog/team-essentials/blob/master/CONTRIBUTING.md).
 
-> Don't forget to do the [after-installation steps](#after-installation-steps) prior to using this extension.
-
-
 # Feature Screenshots
 * [Change Workspace Shell](#change-workspace-shell) <small>[:link: [wiki doc](https://github.com/SteveHartzog/team-essentials/wiki/Change-Workspace-Shell)]</small>
 * [Filter Explorer](#filter-explorer) <small>[:link: [wiki doc](https://github.com/SteveHartzog/team-essentials/wiki/Filter-Explorer)]</small>
@@ -41,18 +38,3 @@ If you have any feature suggestions, or would like to contribute (I need all the
 ## **Update Extensions**
 ![Required Extensions](./images/required-extensions.gif)
 [:arrow_heading_up:](#feature-screenshots)
-
-
-# After installation steps
-> **NOTE**: This extension will not work until you follow these steps.
-
-1. Add the following files to your `.gitignore`:
-   ```shell
-   .vscode/settings.json
-   .vscode/user.json
-   ```
-
-2. Remove `.vscode/settings.json` from source control if it had been added previously.
-3. Create a `.vscode/team.json` to configure your teams' settings. See the [config page](https://github.com/SteveHartzog/team-essentials/wiki/Configuration) on the wiki for more information.
-
-[:arrow_heading_up:](#team-essentials)
