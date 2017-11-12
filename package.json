@@ -22,9 +22,9 @@
       "description": "Twitter Follow"
     },
     {
-      "url": "https://badges.gitter.im/SteveHartzog/team-essentials.svg",
-      "href": "https://gitter.im/team-essentials/Lobby",
-      "description": "Gitter"
+      "url": "(https://img.shields.io/badge/slack-%23team--essentials-red.svg",
+      "href": "https://join.slack.com/t/vscode-dev-community/shared_invite/enQtMjIxOTgxNDE3NzM0LWU5M2ZiZDU1YjBlMzdlZjA2YjBjYzRhYTM5NTgzMTAxMjdiNWU0ZmQzYWI3MWU5N2Q1YjBiYmQ4MzY0NDE1MzY",
+      "description": "Chat at https://vscode-dev-community.slack.com"
     },
     {
       "url": "https://vsmarketplacebadge.apphb.com/version-short/SteveHartzog.team-essentials.svg",
@@ -204,9 +204,9 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.82",
+    "@types/lodash": "^4.14.85",
     "@types/mocha": "^2.2.44",
-    "@types/node": "^8.0.50",
+    "@types/node": "^8.0.51",
     "mocha": "^4.0.1",
     "typescript": "^2.6.1",
     "vscode": "^1.1.6"

@@ -3,8 +3,9 @@ import { clone } from 'lodash';
 import * as misc from './misc';
 import { default as config } from './config';
 
+export enum MessageType { Error, Info, Warning }
 export class Controls {
-  public static async ShowChoices(question: string, choices: MyItem[], callback: Function) {
+  public static async ShowChoices(question: string, choices: Choice[], callback: Function) {
     let choice = await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true });
     await callback(choice);
   }
@@ -27,15 +28,7 @@ export class Controls {
   }
 }
 
-export enum MessageType { Error, Info, Warning }
-export class Message {
-
-}
-export class MessageItem implements _MessageItem {
-  constructor(public title: string, public isCloseAffordance?: boolean) { }
-}
-
-export class MyItem implements QuickPickItem {
+export class Choice implements QuickPickItem {
   public label: string;
   public description: string;
   public detail: string;

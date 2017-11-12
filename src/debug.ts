@@ -1,5 +1,4 @@
 import { OutputChannel, commands, workspace as workspace, window } from 'vscode';
-// import { configTypes, config, env, ui } from '../util';
 import * as Utils from './api';
 import { clone } from 'lodash';
 

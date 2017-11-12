@@ -2,8 +2,8 @@ import { Environment } from './index';
 import { ConfigurationTarget, Uri, workspace, window, ViewColumn, TextEdit, WorkspaceEdit, Position, Range } from 'vscode';
 import { join } from 'path';
 import { isEmpty } from 'lodash';
-import json from './json';
-import env from './environment';
+import * as json from './json';
+import * as env from './environment';
 import * as UI from './ui'
 
 /**
@@ -141,7 +141,6 @@ export default class Configuration {
 
       case ConfigurationFiles.teamEssentials:
         if (env.isMultiRootWorkspace()) {
-          // TODO: Confirm this saves to `{name}.code-workspace`
           let teamEssentialsConfig = workspace.getConfiguration('teamEssentials');
           teamEssentialsConfig.update('debug', data['debug'], ConfigurationTarget.Workspace);
           teamEssentialsConfig.update('statusbar', data['statusbar'], ConfigurationTarget.Workspace);
@@ -168,7 +167,6 @@ export default class Configuration {
     return value;
   }
 
-  // TODO: OldConfig to be deprecated by ~2.0
   static load(workspacePath, isMultiRootWorkspace: boolean = true, isOldConfig: boolean = false) {
     if (!this._globalSettings) {
       this._globalSettings = json.getConfig(env.getGlobalSettingsPath());
@@ -272,11 +270,7 @@ export default class Configuration {
 
   static createDefaultConfigs(workspacePath: string) {
     const out = UI.Output;
-
     out.info('Creating default configs.', 'running: ');
-
-    out.log('Creating config directory: `.vscode/team-essentials`');
-
 
     // Create _state.json, then save to .vscode/team-essentials
     let state = {
@@ -300,7 +294,6 @@ export default class Configuration {
     this.save(workspacePath, ConfigurationFiles.teamEssentials, debug);
 
     // Create filters.json, then save to .vscode/team-essentials
-
     this.save(workspacePath, ConfigurationFiles.filters, this._filters);
 
     // Copy the existing .vscode/settings.json into .vscode/team-essentials/settings.json

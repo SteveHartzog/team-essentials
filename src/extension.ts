@@ -1,15 +1,16 @@
-"use strict";
 import { commands, Disposable, extensions, ExtensionContext, workspace, window, OutputChannel, Uri, WorkspaceFolder } from 'vscode';
 import Folder from './folder';
 import Debug from './debug';
 import * as API from './api';
 
 let currentOpenFile: string;
-let folders: Folder[] = new Array();
+const folders: Folder[] = new Array();
 const ext = extensions.getExtension('SteveHartzog.team-essentials')!;
 const version = ext.packageJSON.version;
-const changelog = 'https://marketplace.visualstudio.com/items/SteveHartzog.team-essentials/changelog';
+// const changelog = 'https://marketplace.visualstudio.com/items/SteveHartzog.team-essentials/changelog';
+const releaseNotes = 'https://github.com/SteveHartzog/team-essentials/wiki/Multi-Root-Update';
 
+// API Dependencies
 const controls = API.UI.Controls;
 const statusbar = API.UI.Statusbar;
 const env = API.Environment;
@@ -30,7 +31,7 @@ const welcome = async () => {
         break;
 
       case 'View Release Notes':
-        await commands.executeCommand('vscode.open', Uri.parse(changelog));
+        await commands.executeCommand('vscode.open', Uri.parse(releaseNotes));
         break;
 
       case 'Run Configuration Wizard':
@@ -50,7 +51,7 @@ const emptyRegister = (context) => {
   }
   const doNothing = () => { return; };
 
-  let extCommands = [
+  const extCommands = [
     commands.registerCommand("teamEssentials.debugStart", () => doNothing()),
     commands.registerCommand("teamEssentials.debugStop", () => doNothing()),
     commands.registerCommand("teamEssentials.filterExplorer", () => notSetup()),
@@ -67,7 +68,7 @@ const fullRegister = (context) => {
   // Init the statusbar if filters have been setup
   statusbar.create();
 
-  let extCommands = [
+  const extCommands = [
     commands.registerCommand("teamEssentials.debugStart", () => Debug.start()),
     commands.registerCommand("teamEssentials.debugStop", () => Debug.stop()),
     commands.registerCommand("teamEssentials.filterExplorer", () => cmd.filterExplorer()),
@@ -151,9 +152,6 @@ const cmd = {
     }
   },
   selectShell: () => {
-    // let workspace = this.getCurrentFolder();
-    // if (workspace) { workspace.selectShell(); }
-
     let resource = window.activeTextEditor.document.uri;
     if (resource) {
       folders[env.getWorkspaceFolderId(resource)].selectShell();
@@ -170,10 +168,6 @@ export const activate = (context: ExtensionContext) => {
   out.setLogLevel(API.Enums.LogLevel.info);
   out.info('Team Essentials starting.');
 
-  // config.setGlobal('currentVersion', '0.1.0');
-  // config.setGlobal('disableWelcome', false);
-  // let currentlyInstalledVersion = '0.1.0';
-  // let disableWelcome = false;
   let currentlyInstalledVersion = config.getGlobal('currentVersion');
   let disableWelcome = config.getGlobal('disableWelcome');
   disableWelcome = disableWelcome === undefined ? false : disableWelcome;

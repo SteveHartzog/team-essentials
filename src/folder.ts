@@ -6,6 +6,7 @@ import { homedir, platform } from 'os';
 // Utilities Namespace
 import * as API from './api';
 
+// API Dependencies
 const statusbar = API.UI.Statusbar;
 const env = API.Environment;
 const exe = API.Execution;
@@ -14,7 +15,7 @@ const out = API.UI.Output;
 const config = API.Configuration;
 const ConfigurationFiles = API.Enums.ConfigurationFiles;
 const controls = API.UI.Controls;
-const MyItem = API.UI.MyItem;
+const Choice = API.UI.Choice;
 const MessageType = API.Enums.MessageType;
 
 enum Shell {
@@ -32,6 +33,7 @@ enum ShellLocations {
   PowerShell = 'C:\\Windows\\sysnative\\WindowsPowerShell\\v1.0\\powershell.exe',
   GitBash = 'C:\\Program Files\\Git\\bin\\bash.exe',
   BashOnUbuntu = 'C:\\Windows\\sysnative\\bash.exe',
+  // Future support?
   Cmder = '',
   HyperWithCmd = 'C:\\Windows\\sysnative\\cmd.exe',
   HyperWithBash = 'C:\\WINDOWS\\Sysnative\\bash.exe'
@@ -94,50 +96,6 @@ export default class Folder {
     }
   }
 
-  //#region filter
-  get filter() {
-    return this._filter;
-  }
-
-  set filter(newFilter) {
-    out.log(`Setting filter: '${newFilter}'`)
-    if (this._filter !== newFilter) {
-      this.changeFilter(newFilter);
-      this.updateStatusBar();
-    }
-  }
-  public filterExplorer() {
-
-    if (this.path) {
-      // build the quickPick to get the newFilter
-      let header = "Select an explorer filter";
-      header +=
-        this.isMultiRootWorkspace
-          ? ` for the ${this.name} workspace:`
-          : ':';
-
-      // Show QuickPick!
-      controls.ShowChoices(header, this.getFilterNames(), (filter) => {
-        if (filter) {
-          // Use chosen filter
-          this.filter = filter.label;
-        }
-      });
-    }
-  }
-
-  public getFilterNames() {
-    let filters = clone(this.config.filters);
-    let choices = new Array();
-    for (let choice in filters) {
-      if (choice != 'default') {
-        choices.push(new MyItem(misc.titleCase(choice), ''));
-      }
-    }
-    return choices;
-  }
-  //#endregion
-
   public applyTeamSettings(reApply: boolean = false) {
     let needSettingsSave = false;
     if (!isEmpty(this.config.teamSettings)) {
@@ -183,10 +141,10 @@ export default class Folder {
 
   public selectShell() {
     controls.ShowChoices('Select your Windows shell:', [
-      new MyItem(Shell.CommandPrompt, 'This is the default on windows.'),
-      new MyItem(Shell.PowerShell, 'Microsoft PowerShell is the new object oriented shell.'),
-      new MyItem(Shell.GitBash, 'This is installed with the git-scm client.'),
-      new MyItem(Shell.BashOnUbuntu, 'This is the new bash shell Microsoft released with the Windows Subsystem for Linux. ')
+      new Choice(Shell.CommandPrompt, 'This is the default on windows.'),
+      new Choice(Shell.PowerShell, 'Microsoft PowerShell is the new object oriented shell.'),
+      new Choice(Shell.GitBash, 'This is installed with the git-scm client.'),
+      new Choice(Shell.BashOnUbuntu, 'This is the new bash shell Microsoft released with the Windows Subsystem for Linux. ')
     ], (choice) => {
       let cli;
       if (choice) {
@@ -242,8 +200,8 @@ export default class Folder {
       state['extensions'] = true;
       config.save(this.path, ConfigurationFiles.state, state);
       controls.ShowChoices('Restart VS Code to enable extensions?', [
-        new MyItem('No', 'Your extensions will not work until you restart VS Code.'),
-        new MyItem('Yes', '')
+        new Choice('No', 'Your extensions will not work until you restart VS Code.'),
+        new Choice('Yes', '')
       ], (choice) => {
         if (choice && choice.label === 'Yes') { commands.executeCommand('workbench.action.reloadWindow'); }
       });
@@ -256,15 +214,15 @@ export default class Folder {
     let options = [];
     if (!isEmpty(this.config.extensions)) {
       if (this.config.extensions.hasOwnProperty('recommendations')) {
-        options.push(new MyItem('Recommended', ''))
+        options.push(new Choice('Recommended', ''))
       }
       // if required extensions provided in `.vscode/extensions.json`
       if (this.config.extensions.hasOwnProperty('required')) {
-        options.push(new MyItem('Required', ''));
+        options.push(new Choice('Required', ''));
       }
     }
     if (options.length > 1) {
-      options.push(new MyItem('All', 'Install both recommended and required extensions.'));
+      options.push(new Choice('All', 'Install both recommended and required extensions.'));
     }
     if (options.length > 0) {
       let updateType = controls.ShowChoices('Update which extensions?', options, (updateType) => {
@@ -318,7 +276,48 @@ export default class Folder {
   }
   //#endregion
 
-  //#region Private
+  //#region filter
+  get filter() {
+    return this._filter;
+  }
+
+  set filter(newFilter) {
+    out.log(`Setting filter: '${newFilter}'`)
+    if (this._filter !== newFilter) {
+      this.changeFilter(newFilter);
+      this.updateStatusBar();
+    }
+  }
+  public filterExplorer() {
+    if (this.path) {
+      // build the quickPick to get the newFilter
+      let header = "Select an explorer filter";
+      header +=
+        this.isMultiRootWorkspace
+          ? ` for the ${this.name} workspace:`
+          : ':';
+
+      // Show QuickPick!
+      controls.ShowChoices(header, this.getFilterNames(), (filter) => {
+        if (filter) {
+          // Use chosen filter
+          this.filter = filter.label;
+        }
+      });
+    }
+  }
+
+  public getFilterNames() {
+    let filters = clone(this.config.filters);
+    let choices = new Array();
+    for (let choice in filters) {
+      if (choice != 'default') {
+        choices.push(new Choice(misc.titleCase(choice), ''));
+      }
+    }
+    return choices;
+  }
+
   private changeFilter(choice) {
     let filters = clone(this.config.filters);
     let state = clone(this.config.state);
@@ -356,6 +355,7 @@ export default class Folder {
       config.save(this.path, ConfigurationFiles.state, state, this._isOldConfig);
     }
   }
+  //#endregion
 
   private init() {
     // Apply/Reapply saved filter if it exists
@@ -373,5 +373,4 @@ export default class Folder {
     // Workspace required extensions
     this.ensureRequiredExtensions();
   }
-  //#endregion
 }

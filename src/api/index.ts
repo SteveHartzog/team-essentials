@@ -1,23 +1,18 @@
-// Has multiple classes, no default
-import * as ui from './ui';
-
-// Has one default but two exports
 import * as config from './config';
-
-// Normal export default
-import env from './environment';
-import exe from './execute';
-import io from './io';
-import json from './json';
-import misc from './misc';
-import wiz from './wizard';
+import * as env from './environment';
+import * as exe from './execute';
+import * as io from './io';
+import * as json from './json';
+import * as ui from './ui';
+import * as misc from './misc';
+import * as wiz from './wizard';
 
 // Has multiple classes without a default, but because we have an enum we need to split out export
 export const UI = {
   Statusbar: ui.Statusbar,
   Output: ui.Output,
   Controls: ui.Controls,
-  MyItem: ui.MyItem
+  Choice: ui.Choice
 }
 
 // Extract and wrap enums

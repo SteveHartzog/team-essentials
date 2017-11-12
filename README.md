@@ -1,4 +1,6 @@
-# Team Essentials [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Team%20Essentials%20for%20VS%20Code&url=https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials) [![Twitter Follow](https://img.shields.io/twitter/follow/SteveHartzog.svg?style=social&label=Follow&style=plastic)](https://twitter.com/intent/follow?screen_name=SteveHartzog) [![Gitter](https://badges.gitter.im/SteveHartzog/team-essentials.svg)](https://gitter.im/team-essentials/Lobby)
+# Team Essentials [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Team%20Essentials%20for%20VS%20Code&url=https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials) [![Twitter Follow](https://img.shields.io/twitter/follow/SteveHartzog.svg?style=social&label=Follow&style=plastic)](https://twitter.com/intent/follow?screen_name=SteveHartzog) [![Chat at https://vscode-dev-community.slack.com/](https://img.shields.io/badge/slack-%23team--essentials-red.svg)](https://join.slack.com/t/vscode-dev-community/shared_invite/enQtMjIxOTgxNDE3NzM0LWU5M2ZiZDU1YjBlMzdlZjA2YjBjYzRhYTM5NTgzMTAxMjdiNWU0ZmQzYWI3MWU5N2Q1YjBiYmQ4MzY0NDE1MzY)
+
+<!-- [![Gitter](https://badges.gitter.im/SteveHartzog/team-essentials.svg)](https://gitter.im/team-essentials/Lobby) -->
 
 [![Version](https://vsmarketplacebadge.apphb.com/version-short/SteveHartzog.team-essentials.svg)](https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials)
 [![VSCode](https://img.shields.io/badge/vscode-v1.18+-373277.svg)](https://code.visualstudio.com/updates/v1_18)
@@ -7,7 +9,7 @@
 
 ![Team Essentials](./images/team-essentials.png)
 
-<small>[2017.11.13]</small> **<font style="color:limegreen">[New]</font>** The Multi-root Update is here! See what's changed either in the [wiki](https://github.com/SteveHartzog/team-essentials/wiki/Multi-Root-Update) or the [CHANGELOG](https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/CHANGELOG.md).
+<small>[2017.11.13]</small> **<font style="color:limegreen">[New]</font>** The Multi-root Update is here! See what's changed either in the [release notes](https://github.com/SteveHartzog/team-essentials/wiki/Multi-Root-Update) or for devs the [CHANGELOG](https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/CHANGELOG.md).
 
 ## Description
 Team Essentials helps you define a default environment for your team:
