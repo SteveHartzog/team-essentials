@@ -28,7 +28,7 @@
   // Control if TypeScript definition files should be ignored
   "tslint.ignoreDefinitionFiles": true,
   // Configure glob patterns of file paths to exclude from linting
-  "tslint.exclude": "",
+  "tslint.exclude": "**/_*",
   // Run the linter on save (onSave) or on type (onType)
   "tslint.run": "onType",
   // A path added to NODE_PATH when resolving the tslint module.
