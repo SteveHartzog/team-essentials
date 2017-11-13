@@ -9,5 +9,5 @@ export function runCommand(cmd: string, dir, args: string[]): void {
   let command = cmd + ' ' + args.join(' ');
   let childProcess = exec(command, { cwd: dir, env: process.env });
   childProcess.stderr.on('data', data => output.error(<string>data));
-  childProcess.stdout.on('data', data => output.error(<string>data));
+  childProcess.stdout.on('data', data => output.info(<string>data));
 }

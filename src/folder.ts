@@ -149,8 +149,8 @@ export default class Folder {
             break;
         }
         if (cli) {
-          let currentShell = config.getGlobal('terminal.integrated.shell.windows');
-          if (cli !== currentShell) {
+          let workspaceShell = config.getGlobal('terminal.integrated.shell.windows', true);
+          if (cli !== workspaceShell) {
             // Save to workspace in multi-root, global if not
             config.setGlobal('terminal.integrated.shell.windows', cli, env.isMultiRootWorkspace())
             this.restartShell();
@@ -163,16 +163,12 @@ export default class Folder {
   public restartShell() {
     // only kill if it has been opened?
     commands.executeCommand('workbench.action.terminal.focus').then(() => {
-      try {
-        commands.executeCommand('workbench.action.terminal.kill').then(() => {
-          // Add a .5 sec timeout to give it a chance to ensure kill is completed
-          setTimeout(() => {
-            commands.executeCommand('workbench.action.terminal.focus');
-          }, 500);
-        });
-      } catch (e) {
-        out.error(e);
-      }
+      commands.executeCommand('workbench.action.terminal.kill').then(() => {
+        // Add a .5 sec timeout to give it a chance to ensure kill is completed
+        setTimeout(() => {
+          commands.executeCommand('workbench.action.terminal.focus');
+        }, 500);
+      });
     });
   }
   //#endregion
@@ -333,11 +329,11 @@ export default class Folder {
     }
 
     // Update workspace to reflect new filter
-    config.save(this.path, ConfigurationFiles.folderSettings, folderSettings, this._isOldConfig);
+    config.save(this.path, ConfigurationFiles.folderSettings, folderSettings);
 
     // Update state only if needed
     if (choice !== state['filter']) {
-      this._filter = state['filter'] = choice;
+      this._filter = this.config.state['filter'] = choice;
       config.save(this.path, ConfigurationFiles.state, state, this._isOldConfig);
     }
   }
@@ -350,7 +346,7 @@ export default class Folder {
       this._filter = this.config.state.filter;
     }
 
-    // Apply team settings if in single-root workspace
+    // Apply team settings ONLY if in single-root workspace
     if (!this.isMultiRootWorkspace) {
       this.applyTeamSettings();
     }

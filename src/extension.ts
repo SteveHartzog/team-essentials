@@ -102,14 +102,12 @@ const fullRegister = (context) => {
     workspace.onDidOpenTextDocument((e) => {
       // Ignore anything that isn't a file opening
       if (e.uri.scheme === 'file') {
-        debounce(() => {
-          // Ensure that this is a new document (not opening the same document n-times)
-          if (e.uri.fsPath !== currentOpenFile) {
-            let workspaceFolderId = env.getWorkspaceFolderId(e.uri);
-            folders[workspaceFolderId].updateStatusBar();
-            currentOpenFile = e.uri.fsPath;
-          }
-        }, 50);
+        // Ensure that this is a new document (not opening the same document n-times)
+        if (e.uri.fsPath !== currentOpenFile) {
+          let workspaceFolderId = env.getWorkspaceFolderId(e.uri);
+          folders[workspaceFolderId].updateStatusBar();
+          currentOpenFile = e.uri.fsPath;
+        }
       }
     })
   );

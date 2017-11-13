@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
        > This essentially uses a new configuration setting `teamEssentials.disableWelcome`.
     3. Never Show Again: Prevents the welcome message from ever showing again.
   - Configuration Wizard: Depending on the state of your project one wizard will run (on all folders in the current workspace):
-    1. New User Wizard: This will create the `.vscode/team-essentials` directory, all config files (with some defaults), will copy the existing `.vscode/settings.json` file into a `.vscode/team-essentials/settings.json` file (to support local explorer filtering) and will append the needed settings to your `.gitignore` file. This will occur on all workspaces.
+    1. New User Wizard: This will create the `.vscode/team-essentials` directory, all config files (with some defaults), will copy the existing `.vscode/settings.json` file into a `.vscode/team-essentials/settings.json` file (for single-root only) or to the multi-root workspace file (to support local explorer filtering) and will append the needed settings to your `.gitignore` file. This will occur on all workspaces.
     2. Migration Wizard: This will take the old `.vscode/team.json` and split it out into (4) files in the `.vscode/team-essentials` folder. The migration will only be done on workspaces that currently have a `.vscode/team.json`.
   - Multi-root workspace support. Major refactor for 1.18+. ([@SteveHartzog](https://github.com/stevehartzog) in [#8](https://github.com/SteveHartzog/team-essentials/issues/8))
     * Statusbar now shows workspace name as a prefix to the filter if in a mult-root workspace. Additionally the filter selection indicates which workspace you are filtering (based on what document is open in the editor).
@@ -27,12 +27,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     * `teamEssentials.statusbar.icon`: Set a custom icon from the octicon list @ https://octicons.github.com/.
     * `teamEssentials.statusbar.priority`:Set a custom priority for the statusbar setting.
   - Added badges to `README.md`: vscode, issues, license.
-  - Added social links to `README.md` header.
+  - Added social links (twitter & slack) to `README.md` header.
 
 ### Changed
+  - Statusbar icon defaults to 'search' instead of 'repo' now.
   - Team configuration files split from a single file `.vscode/team.json` to multiple files in `.vscode/team-essentials`.
   - State file changed/moved from `.vscode/user.json` to `.vscode/team-essentials/state.json`
   - Change Shell has been updated to actually kill and restart the current terminal... allowing a single click change of your current shell without any additional steps.
+  - The user shell choice is no longer saved to state nor applied.
   - Overhauled wiki to reflect the rewrite.
   - Old `src/utils` has been refactored into an `API` under the `./api` folder. So now you can access the entire API with one `import * as API from './api';`.
 

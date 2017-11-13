@@ -161,10 +161,14 @@ export default class Configuration {
     }
   }
 
-  static getGlobal(section: string) {
-    let value = workspace.getConfiguration().inspect(section).globalValue
-    UI.Output.log(`getGlobal('${section}'): ${value}`);
-    return value;
+  static getGlobal(section: string, fromWorkspace = false) {
+    let value = workspace.getConfiguration(null, env.getResource()).inspect(section);
+    if (fromWorkspace && value.defaultValue) {
+      UI.Output.log(`getGlobal('${section}'): ${value.defaultValue}`);
+      return value.defaultValue;
+    }
+    UI.Output.log(`getGlobal('${section}'): ${value.globalValue}`);
+    return value.globalValue;
   }
 
   static load(workspacePath, isMultiRootWorkspace: boolean = true, isOldConfig: boolean = false) {
@@ -249,9 +253,11 @@ export default class Configuration {
 
       // Team Settings migration
       if (isMultiRootWorkspace) {
-        oldConfig['defaults'].forEach(element => {
-          this.setGlobal(element, oldConfig['defaults'][element], true);
-        });
+        let settings = oldConfig['defaults'];
+        for (let setting in settings) {
+          console.log(`adding setting: '${setting}': '${settings[setting]}'`)
+          this.setGlobal(setting, settings[setting], true);
+        }
       } else {
         this.save(workspacePath, ConfigurationFiles.teamSettings, oldConfig['defaults']);
       }

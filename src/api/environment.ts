@@ -39,7 +39,7 @@ export function hasConfig(name: string, folderPath: string) {
 }
 
 export function hasOldConfig(name: string, folderPath: string) {
-  let value = this.confirmPath(this.getOldTeamFilePath(join(folderPath, ConfigurationFiles.legacyTeam)));
+  let value = this.confirmPath(this.getOldTeamFilePath(join(folderPath)));
   UI.Output.log(`hasOldConfig('${name}'): ${value}`);
   return value;
 }
@@ -81,19 +81,6 @@ export function isWindows() {
   return value;
 }
 
-// export function getGlobalSettingsPath() {
-//   switch (platform()) {
-//     case Platform.windows:
-//       return join(homedir(), 'AppData/Roaming/Code/User/settings.json');
-
-//     case Platform.mac:
-//       return join(homedir(), 'Library/Application Support/Code/User/settings.json');
-
-//     case Platform.linux:
-//       return join(homedir(), '.config/Code/User/settings.json');
-//   }
-// }
-
 export function getRootFolderPath() {
   return vscode.workspace.workspaceFolders[vscode.workspace.workspaceFolders.length - 1].uri.fsPath;
 }
@@ -104,7 +91,7 @@ export function getResource() {
   } else {
     // use last workspace path if null
     let index = workspace.workspaceFolders.length > 0 ? workspace.workspaceFolders.length - 1 : 0;
-    workspace.workspaceFolders[index].uri;
+    return workspace.workspaceFolders[index].uri;
   }
 }
 
