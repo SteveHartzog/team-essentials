@@ -2,6 +2,7 @@ import { commands, Disposable, extensions, ExtensionContext, workspace, window, 
 import Folder from './folder';
 import Debug from './debug';
 import * as API from './api';
+import { debounce } from 'lodash';
 
 let currentOpenFile: string;
 const folders: Folder[] = new Array();
@@ -27,7 +28,7 @@ const welcome = async () => {
     out.continue(`welcome('${value}')`);
     switch (value) {
       case 'Never Show Again':
-        await config.setGlobal('disableWelcome', true);
+        await config.setGlobal('teamEssentials.disableWelcome', true);
         break;
 
       case 'View Release Notes':
@@ -90,17 +91,25 @@ const fullRegister = (context) => {
     out.info(`Folder('${workspaceFolder.name}'): initialized`);
   });
 
+  // UpdateStatusbar to show it even if no document is open
+  let resource = env.getResource();
+  let workspaceFolderId = env.getWorkspaceFolderId(resource);
+  folders[workspaceFolderId].updateStatusBar();
+  currentOpenFile = resource.fsPath;
+
   // On Current Workspace Change
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((e) => {
       // Ignore anything that isn't a file opening
       if (e.uri.scheme === 'file') {
-        // Ensure that this is a new document (not opening the same document n-times)
-        if (e.uri.fsPath !== currentOpenFile) {
-          let workspaceFolderId = env.getWorkspaceFolderId(e.uri);
-          folders[workspaceFolderId].updateStatusBar();
-          currentOpenFile = e.uri.fsPath;
-        }
+        debounce(() => {
+          // Ensure that this is a new document (not opening the same document n-times)
+          if (e.uri.fsPath !== currentOpenFile) {
+            let workspaceFolderId = env.getWorkspaceFolderId(e.uri);
+            folders[workspaceFolderId].updateStatusBar();
+            currentOpenFile = e.uri.fsPath;
+          }
+        }, 50);
       }
     })
   );
@@ -127,37 +136,23 @@ const cmd = {
     return;
   },
   filterExplorer: () => {
-    let resource = window.activeTextEditor.document.uri;
-    if (resource) {
-      folders[env.getWorkspaceFolderId(resource)].filterExplorer();
-    } else {
-      controls.ShowMessage(MessageType.Error, 'Please open a document before filtering that workspace.');
-    }
+    let resource = env.getResource();
+    folders[env.getWorkspaceFolderId(resource)].filterExplorer();
   },
   applyTeamSettings: () => {
-    let resource = window.activeTextEditor.document.uri;
-    if (resource) {
-      folders[env.getWorkspaceFolderId(resource)].applyTeamSettings();
-    } else {
-      controls.ShowMessage(MessageType.Error, 'Please open a document before applying Team Settings to a workspace.');
-    }
+    let resource = env.getResource();
+    folders[env.getWorkspaceFolderId(resource)].applyTeamSettings();
   },
   updateExtensions: () => {
-    let resource = window.activeTextEditor.document.uri;
-    if (resource) {
-      let folder = folders[env.getWorkspaceFolderId(resource)];
-      if (folder) {
-        folder.updateExtensions();
-      }
+    let resource = env.getResource();
+    let folder = folders[env.getWorkspaceFolderId(resource)];
+    if (folder) {
+      folder.updateExtensions();
     }
   },
   selectShell: () => {
-    let resource = window.activeTextEditor.document.uri;
-    if (resource) {
-      folders[env.getWorkspaceFolderId(resource)].selectShell();
-    } else {
-      controls.ShowMessage(MessageType.Error, 'Please open a document before selecting a shell.');
-    }
+    let resource = env.getResource();
+    folders[env.getWorkspaceFolderId(resource)].selectShell();
   }
 }
 
@@ -168,12 +163,12 @@ export const activate = (context: ExtensionContext) => {
   out.setLogLevel(API.Enums.LogLevel.info);
   out.info('Team Essentials starting.');
 
-  let currentlyInstalledVersion = config.getGlobal('currentVersion');
-  let disableWelcome = config.getGlobal('disableWelcome');
+  let currentlyInstalledVersion = config.getGlobal('teamEssentials.currentVersion');
+  let disableWelcome = config.getGlobal('teamEssentials.disableWelcome');
   disableWelcome = disableWelcome === undefined ? false : disableWelcome;
 
   if (!disableWelcome && currentlyInstalledVersion !== version) {
-    config.setGlobal('currentVersion', version);
+    config.setGlobal('teamEssentials.currentVersion', version);
 
     welcome().then(() => {
       out.continue('Welcome completed, now activating features.');

@@ -52,13 +52,12 @@ export default class Folder {
     this.path = this.uri.fsPath;
     this.name = workspaceFolder.name;
 
-    this._isOldConfig = false;
     if (env.hasConfig(this.name, this.path)) {
+      this._isOldConfig = false;
       out.log(`Loading configuration for '${this.name}'`);
       this.config = config.load(this.path, isMultiRootWorkspace);
       this.init();
     } else if (env.hasOldConfig(this.name, this.path)) {
-      this._isOldConfig;
       out.info(`Loading **OLD** configuration for '${this.name}'`);
       this.config = config.load(this.path, isMultiRootWorkspace, true);
       this.init();
@@ -119,9 +118,6 @@ export default class Folder {
           this.config.state['settings'] = true;
           config.save(this.path, ConfigurationFiles.state, this.config.state);
         }
-        // Add chosen shell if in user settings
-        this.applyUserSelectedShell();
-
       } else {
         out.log(`Team Setttings already applied for '${this.name}'`);
       }
@@ -129,16 +125,6 @@ export default class Folder {
   }
 
   //#region Windows Shell
-  public applyUserSelectedShell() {
-    if (platform() == 'win32' && !isEmpty(this.config.state) && this.config.state.hasOwnProperty('terminal')) {
-      let chosenCli = this.config.state['terminal'];
-      let currentCli = this.config.global['terminal.integrated.shell.windows'];
-      if (chosenCli !== currentCli) {
-        this.applyShell();
-      }
-    }
-  }
-
   public selectShell() {
     controls.ShowChoices('Select your Windows shell:', [
       new Choice(Shell.CommandPrompt, 'This is the default on windows.'),
@@ -163,31 +149,31 @@ export default class Folder {
             break;
         }
         if (cli) {
-          // Save the user choice to their user settings
-          this.config.state['terminal'] = cli;
-          config.save(this.path, ConfigurationFiles.state, this.config.state);
-
-          this.applyShell();
+          let currentShell = config.getGlobal('terminal.integrated.shell.windows');
+          if (cli !== currentShell) {
+            // Save to workspace in multi-root, global if not
+            config.setGlobal('terminal.integrated.shell.windows', cli, env.isMultiRootWorkspace())
+            this.restartShell();
+          }
         }
       }
     });
   }
 
-  public applyShell() {
-    // Update the global config to reflect the user choice
-    this.config.global['terminal.integrated.shell.windows'] = this.config.state['terminal'];
-    config.save(this.path, ConfigurationFiles.userGlobal, this.config.global);
-
-    try {
-      commands.executeCommand('workbench.action.terminal.kill').then(() => {
-        // Add a .5 sec timeout to give it a chance to ensure kill is completed
-        setTimeout(() => {
-          commands.executeCommand('workbench.action.terminal.new');
-        }, 500);
-      });
-    } catch (e) {
-      out.error(e);
-    }
+  public restartShell() {
+    // only kill if it has been opened?
+    commands.executeCommand('workbench.action.terminal.focus').then(() => {
+      try {
+        commands.executeCommand('workbench.action.terminal.kill').then(() => {
+          // Add a .5 sec timeout to give it a chance to ensure kill is completed
+          setTimeout(() => {
+            commands.executeCommand('workbench.action.terminal.focus');
+          }, 500);
+        });
+      } catch (e) {
+        out.error(e);
+      }
+    });
   }
   //#endregion
 
@@ -364,11 +350,10 @@ export default class Folder {
       this._filter = this.config.state.filter;
     }
 
-    // Apply team settings if any
-    this.applyTeamSettings();
-
-    // Add chosen shell if in user settings
-    this.applyUserSelectedShell();
+    // Apply team settings if in single-root workspace
+    if (!this.isMultiRootWorkspace) {
+      this.applyTeamSettings();
+    }
 
     // Workspace required extensions
     this.ensureRequiredExtensions();

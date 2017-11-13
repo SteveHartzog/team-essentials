@@ -1,10 +1,11 @@
 import { Environment } from './index';
 import { ConfigurationTarget, Uri, workspace, window, ViewColumn, TextEdit, WorkspaceEdit, Position, Range } from 'vscode';
 import { join } from 'path';
-import { isEmpty } from 'lodash';
+import { isEmpty, forEach } from 'lodash';
 import * as json from './json';
 import * as env from './environment';
 import * as UI from './ui'
+import { isMultiRootWorkspace } from './environment';
 
 /**
  * List of all the configuration files
@@ -113,11 +114,6 @@ export default class Configuration {
         json.write(join(workspacePath, ConfigurationFiles.filters), data);
         break;
 
-      case ConfigurationFiles.userGlobal: // For windows shell only
-        let settings = env.getGlobalSettingsPath();
-        json.write(settings, data);
-        break;
-
       case ConfigurationFiles.folderSettings:
         json.write(join(workspacePath, isOldConfig ? ConfigurationFiles.legacyTeam : ConfigurationFiles.folderSettings), data);
         break;
@@ -156,21 +152,22 @@ export default class Configuration {
     }
   }
 
-  static setGlobal(section: string, value: any) {
-    UI.Output.log(`Saving Global config: '${section}': '${value}'`);
-    workspace.getConfiguration('teamEssentials').update(section, value, ConfigurationTarget.Global);
+  static setGlobal(section: string, value: any, toWorkspace = false) {
+    UI.Output.log(`setGlobal('${section}') = '${value}')`);
+    if (toWorkspace) { // for multi-root... use the workspace config
+      workspace.getConfiguration().update(section, value, ConfigurationTarget.Workspace);
+    } else { // otherwise to user global settings
+      workspace.getConfiguration().update(section, value, ConfigurationTarget.Global);
+    }
   }
 
   static getGlobal(section: string) {
-    let value = workspace.getConfiguration('teamEssentials').inspect(section).globalValue
+    let value = workspace.getConfiguration().inspect(section).globalValue
     UI.Output.log(`getGlobal('${section}'): ${value}`);
     return value;
   }
 
   static load(workspacePath, isMultiRootWorkspace: boolean = true, isOldConfig: boolean = false) {
-    if (!this._globalSettings) {
-      this._globalSettings = json.getConfig(env.getGlobalSettingsPath());
-    }
     if (isOldConfig) {
       let oldTeamConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
       let oldStateConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyState));
@@ -180,12 +177,10 @@ export default class Configuration {
         state: {
           extensions: oldStateConfig['extensions.required.installed'],
           filter: oldStateConfig['explorer.filter'],
-          settings: oldStateConfig['defaults.applied'],
-          terminal: oldStateConfig['terminal']
+          settings: oldStateConfig['defaults.applied']
         },
         teamSettings: oldTeamConfig['defaults'],
         folderSettings: json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings)),
-        global: this._globalSettings,
         teamEssentials: this.loadTeamEssentials(workspacePath, oldTeamConfig, isMultiRootWorkspace)
       }
     }
@@ -195,7 +190,6 @@ export default class Configuration {
       state: json.getConfig(join(workspacePath, ConfigurationFiles.state)),
       teamSettings: json.getConfig(join(workspacePath, ConfigurationFiles.teamSettings)),
       folderSettings: json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings)),
-      global: this._globalSettings,
       teamEssentials: this.loadTeamEssentials(workspacePath, null, isMultiRootWorkspace)
     };
   }
@@ -231,7 +225,7 @@ export default class Configuration {
     }
   }
 
-  static async migrateConfigs(workspacePath: string) {
+  static async migrateConfigs(workspacePath: string, isMultiRootWorkspace: boolean = true) {
     let exists = env.createDirectory(join(workspacePath, '.vscode/team-essentials'))
     if (exists) {
       let oldConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
@@ -247,15 +241,20 @@ export default class Configuration {
       this.save(workspacePath, ConfigurationFiles.state, {
         extensions: oldState['extensions.required.installed'],
         filter: oldState['explorer.filter'],
-        settings: oldState['defaults.applied'],
-        terminal: oldState['terminal']
+        settings: oldState['defaults.applied']
       });
 
       // Extensions migration
       this.save(workspacePath, ConfigurationFiles.extensions, this._loadExtensions(workspacePath, oldConfig));
 
       // Team Settings migration
-      this.save(workspacePath, ConfigurationFiles.teamSettings, oldConfig['defaults']);
+      if (isMultiRootWorkspace) {
+        oldConfig['defaults'].forEach(element => {
+          this.setGlobal(element, oldConfig['defaults'][element], true);
+        });
+      } else {
+        this.save(workspacePath, ConfigurationFiles.teamSettings, oldConfig['defaults']);
+      }
 
       // Filter migration
       this.save(workspacePath, ConfigurationFiles.filters, oldConfig['explorer.filters']);
@@ -296,9 +295,13 @@ export default class Configuration {
     // Create filters.json, then save to .vscode/team-essentials
     this.save(workspacePath, ConfigurationFiles.filters, this._filters);
 
-    // Copy the existing .vscode/settings.json into .vscode/team-essentials/settings.json
+    // Team Settings migration
     let folderSettings = json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings));
-    this.save(workspacePath, ConfigurationFiles.teamSettings, folderSettings);
+    if (isMultiRootWorkspace) {
+      forEach(folderSettings, (value, key) => { this.setGlobal(key, value, true); });
+    } else {
+      this.save(workspacePath, ConfigurationFiles.teamSettings, folderSettings);
+    }
   }
 
   public static insertGitIgnoreSettings(workspacePath: string) {
