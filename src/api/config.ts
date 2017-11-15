@@ -224,7 +224,7 @@ export default class Configuration {
         };
       } else { // Single Root Workspace
         // Load config or default StatusbarConfig
-        return workspacePath ? json.getConfig(join(workspacePath, 'config.json')) : this._defaultStatusbarConfig;
+        return workspacePath ? json.getConfig(join(workspacePath, ConfigurationFiles.teamEssentialsSingleRoot)) : this._defaultStatusbarConfig;
       }
     }
   }
