@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.1] - 2017-11-15
+### Fixed
+  - getGlobal was pulling the wrong value for workspaces (was globalValue, now is workspaceValue)
+  - MultiRoot config.js was being saved to the wrong location '/' instead of `ConfigurationFiles.teamEssentialsSingleRoot`
+  - When you saved a shell, it was writing to the workspace config in multi-root - it is now saving to the user's global.
+
+### Added
+  - Added `teamEssentials.logLevel` setting. Options include 'errors' (only), 'info' (default) and 'verbose'.
+
+### Changed
+  - Replaced `comment-json` with Microsoft's `jsonc-parser`
+
 ## [1.0.0] - 2017-11-13
 ### Added
   - Welcome message now appears if not disabled and Team Essentials has been updated since the last time you opened VS Code. It comes with (3) options:

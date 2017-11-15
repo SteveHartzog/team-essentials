@@ -1,224 +1,224 @@
 {
-  "name": "team-essentials",
-  "displayName": "Team Essentials",
-  "version": "1.0.0",
-  "author": "SteveHartzog",
-  "publisher": "SteveHartzog",
-  "description": "Filter your explorer view (statusbar shows current filter) with customizable team-wide filters, change your integrated terminal (shell) by simply selecting it, change the window layout on debug start and stop, team settings override local workspace settings.",
-  "homepage": "https://github.com/SteveHartzog/team-essentials/blog/master/README.md",
-  "bugs": {
-    "url": "https://github.com/SteveHartzog/team-essentials/issues"
-  },
-  "license": "SEE LICENSE IN LICENSE.txt",
-  "badges": [
-    {
-      "url": "https://img.shields.io/twitter/url/http/shields.io.svg?style=social",
-      "href": "https://twitter.com/intent/tweet?text=Check%20out%20Team%20Essentials%20for%20VS%20Code&url=https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
-      "description": "Twitter Share"
+    "name": "team-essentials",
+    "displayName": "Team Essentials",
+    "version": "1.0.1",
+    "author": "SteveHartzog",
+    "publisher": "SteveHartzog",
+    "description": "Filter your explorer view (statusbar shows current filter) with customizable team-wide filters, change your integrated terminal (shell) by simply selecting it, change the window layout on debug start and stop, team settings override local workspace settings.",
+    "homepage": "https://github.com/SteveHartzog/team-essentials/blog/master/README.md",
+    "bugs": {
+        "url": "https://github.com/SteveHartzog/team-essentials/issues"
     },
-    {
-      "url": "https://img.shields.io/twitter/follow/SteveHartzog.svg?style=social&label=Follow&style=plastic",
-      "href": "https://twitter.com/intent/follow?screen_name=SteveHartzog",
-      "description": "Twitter Follow"
-    },
-    {
-      "url": "https://img.shields.io/badge/slack-%23team--essentials-red.svg",
-      "href": "https://join.slack.com/t/vscode-dev-community/shared_invite/enQtMjIxOTgxNDE3NzM0LWU5M2ZiZDU1YjBlMzdlZjA2YjBjYzRhYTM5NTgzMTAxMjdiNWU0ZmQzYWI3MWU5N2Q1YjBiYmQ4MzY0NDE1MzY",
-      "description": "Chat at https://vscode-dev-community.slack.com"
-    },
-    {
-      "url": "https://vsmarketplacebadge.apphb.com/version-short/SteveHartzog.team-essentials.svg",
-      "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
-      "description": "Version"
-    },
-    {
-      "url": "https://img.shields.io/badge/vscode-v1.18+-373277.svg",
-      "href": "https://code.visualstudio.com/updates/v1_18",
-      "description": "VSCode"
-    },
-    {
-      "url": "https://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg",
-      "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
-      "description": "Installs"
-    },
-    {
-      "url": "https://img.shields.io/github/issues/SteveHartzog/team-essentials.svg",
-      "href": "https://github.com/SteveHartzog/team-essentials/issues",
-      "description": "Issues"
-    },
-    {
-      "url": "https://img.shields.io/github/license/mashape/apistatus.svg",
-      "href": "https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/LICENSE",
-      "description": "License"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SteveHartzog/team-essentials"
-  },
-  "engines": {
-    "vscode": "^1.18.0"
-  },
-  "icon": "images/icon.png",
-  "galleryBanner": {
-    "color": "#3B3738",
-    "theme": "dark"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:teamEssentials.changeWindowsShell",
-    "onCommand:teamEssentials.filterExplorer",
-    "onCommand:teamEssentials.updateExtensions",
-    "onCommand:teamEssentials.applyDefaultSettings",
-    "onDebug:teamEssentials.debugStart",
-    "onCommand:teamEssentials.debugStop",
-    "workspaceContains:.vscode/team.json"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "configuration": [
-      {
-        "type": "object",
-        "title": "Team Essentials",
-        "properties": {
-          "teamEssentials.logLevel": {
-            "type": "string",
-            "default": false,
-            "description": "Set's the logging level: 'error', 'info', 'verbose'"
-          },
-          "teamEssentials.disableWelcome": {
-            "type": "boolean",
-            "default": false,
-            "description": "Disables the Welcome message."
-          },
-          "teamEssentials.currentVersion": {
-            "type": "string",
-            "description": "Stores the current version of the Team Essentials extension."
-          },
-          "teamEssentials.statusbar.disable": {
-            "type": "boolean",
-            "default": false,
-            "description": "Disables the statusbar."
-          },
-          "teamEssentials.statusbar.align": {
-            "type": "string",
-            "default": "right",
-            "description": "Specifies if the statusbar should be aligned 'left' or 'right'."
-          },
-          "teamEssentials.statusbar.hideIcon": {
-            "type": "boolean",
-            "default": false,
-            "description": "Hides the icon for the filter on the statusbar."
-          },
-          "teamEssentials.statusbar.icon": {
-            "type": "string",
-            "default": "search",
-            "description": "Set a custom icon from the octicon list @ https://octicons.github.com/."
-          },
-          "teamEssentials.statusbar.priority": {
-            "type": "number",
-            "default": 0,
-            "description": "Set a custom priority for the statusbar setting."
-          },
-          "teamEssentials.debug.start.output": {
-            "type": "string",
-            "default": "workbench.debug.action.focusRepl",
-            "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *output* area."
-          },
-          "teamEssentials.debug.start.explorer": {
-            "type": "string",
-            "default": "workbench.view.debug",
-            "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *explorer* area."
-          },
-          "teamEssentials.debug.stop.output": {
-            "type": "string",
-            "default": "workbench.action.output.toggleOutput",
-            "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *output* area."
-          },
-          "teamEssentials.debug.stop.explorer": {
-            "type": "string",
-            "default": "workbench.view.explorer",
-            "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *explorer* area."
-          },
-          "teamEssentials.debug.stop.terminatePreLaunchTask": {
-            "type": "boolean",
-            "default": true,
-            "description": "Configure if you wish to terminate the prelaunch task."
-          }
+    "license": "SEE LICENSE IN LICENSE.txt",
+    "badges": [
+        {
+            "url": "https://img.shields.io/twitter/url/http/shields.io.svg?style=social",
+            "href": "https://twitter.com/intent/tweet?text=Check%20out%20Team%20Essentials%20for%20VS%20Code&url=https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
+            "description": "Twitter Share"
+        },
+        {
+            "url": "https://img.shields.io/twitter/follow/SteveHartzog.svg?style=social&label=Follow&style=plastic",
+            "href": "https://twitter.com/intent/follow?screen_name=SteveHartzog",
+            "description": "Twitter Follow"
+        },
+        {
+            "url": "https://img.shields.io/badge/slack-%23team--essentials-red.svg",
+            "href": "https://join.slack.com/t/vscode-dev-community/shared_invite/enQtMjIxOTgxNDE3NzM0LWU5M2ZiZDU1YjBlMzdlZjA2YjBjYzRhYTM5NTgzMTAxMjdiNWU0ZmQzYWI3MWU5N2Q1YjBiYmQ4MzY0NDE1MzY",
+            "description": "Chat at https://vscode-dev-community.slack.com"
+        },
+        {
+            "url": "https://vsmarketplacebadge.apphb.com/version-short/SteveHartzog.team-essentials.svg",
+            "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
+            "description": "Version"
+        },
+        {
+            "url": "https://img.shields.io/badge/vscode-v1.18+-373277.svg",
+            "href": "https://code.visualstudio.com/updates/v1_18",
+            "description": "VSCode"
+        },
+        {
+            "url": "https://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg",
+            "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
+            "description": "Installs"
+        },
+        {
+            "url": "https://img.shields.io/github/issues/SteveHartzog/team-essentials.svg",
+            "href": "https://github.com/SteveHartzog/team-essentials/issues",
+            "description": "Issues"
+        },
+        {
+            "url": "https://img.shields.io/github/license/mashape/apistatus.svg",
+            "href": "https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/LICENSE",
+            "description": "License"
         }
-      }
     ],
-    "jsonValidation": [
-      {
-        "fileMatch": "team.json",
-        "url": "./src/schemas/team.json"
-      },
-      {
-        "fileMatch": ".vscode/team/settings.json",
-        "url": "./src/schemas/settings.json"
-      },
-      {
-        "fileMatch": "extensions.json",
-        "url": "./src/schemas/extensions.json"
-      },
-      {
-        "fileMatch": ".vscode/team/debug.json",
-        "url": "./src/schemas/debug.json"
-      },
-      {
-        "fileMatch": ".vscode/team/filters.json",
-        "url": "./src/schemas/filters.json"
-      }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SteveHartzog/team-essentials"
+    },
+    "engines": {
+        "vscode": "^1.18.0"
+    },
+    "icon": "images/icon.png",
+    "galleryBanner": {
+        "color": "#3B3738",
+        "theme": "dark"
+    },
+    "categories": [
+        "Other"
     ],
-    "commands": [
-      {
-        "command": "teamEssentials.selectShell",
-        "title": "Team Essentials: Change Windows Shell"
-      },
-      {
-        "command": "teamEssentials.filterExplorer",
-        "title": "Team Essentials: Filter Explorer"
-      },
-      {
-        "command": "teamEssentials.updateExtensions",
-        "title": "Team Essentials: Update Team Extensions"
-      },
-      {
-        "command": "teamEssentials.applyTeamSettings",
-        "title": "Team Essentials: Apply Team Settings"
-      },
-      {
-        "command": "teamEssentials.configWizard",
-        "title": "Team Essentials: Configuration Wizard"
-      }
+    "activationEvents": [
+        "onCommand:teamEssentials.changeWindowsShell",
+        "onCommand:teamEssentials.filterExplorer",
+        "onCommand:teamEssentials.updateExtensions",
+        "onCommand:teamEssentials.applyDefaultSettings",
+        "onDebug:teamEssentials.debugStart",
+        "onCommand:teamEssentials.debugStop",
+        "workspaceContains:.vscode/team.json"
     ],
-    "keybindings": [
-      {
-        "command": "teamEssentials.debugStop",
-        "key": "shift+F5",
-        "when": "editorTextFocus"
-      }
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.85",
-    "@types/mocha": "^2.2.44",
-    "@types/node": "^6.0.92",
-    "mocha": "^4.0.1",
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.7"
-  },
-  "dependencies": {
-    "jsonc-parser": "^1.0.0",
-    "lodash": "^4.17.4",
-    "run-in-terminal": "0.0.3"
-  }
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": [
+            {
+                "type": "object",
+                "title": "Team Essentials",
+                "properties": {
+                    "teamEssentials.logLevel": {
+                        "type": "string",
+                        "default": false,
+                        "description": "Set's the logging level: 'error', 'info', 'verbose'"
+                    },
+                    "teamEssentials.disableWelcome": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Disables the Welcome message."
+                    },
+                    "teamEssentials.currentVersion": {
+                        "type": "string",
+                        "description": "Stores the current version of the Team Essentials extension."
+                    },
+                    "teamEssentials.statusbar.disable": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Disables the statusbar."
+                    },
+                    "teamEssentials.statusbar.align": {
+                        "type": "string",
+                        "default": "right",
+                        "description": "Specifies if the statusbar should be aligned 'left' or 'right'."
+                    },
+                    "teamEssentials.statusbar.hideIcon": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Hides the icon for the filter on the statusbar."
+                    },
+                    "teamEssentials.statusbar.icon": {
+                        "type": "string",
+                        "default": "search",
+                        "description": "Set a custom icon from the octicon list @ https://octicons.github.com/."
+                    },
+                    "teamEssentials.statusbar.priority": {
+                        "type": "number",
+                        "default": 0,
+                        "description": "Set a custom priority for the statusbar setting."
+                    },
+                    "teamEssentials.debug.start.output": {
+                        "type": "string",
+                        "default": "workbench.debug.action.focusRepl",
+                        "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *output* area."
+                    },
+                    "teamEssentials.debug.start.explorer": {
+                        "type": "string",
+                        "default": "workbench.view.debug",
+                        "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug start in the *explorer* area."
+                    },
+                    "teamEssentials.debug.stop.output": {
+                        "type": "string",
+                        "default": "workbench.action.output.toggleOutput",
+                        "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *output* area."
+                    },
+                    "teamEssentials.debug.stop.explorer": {
+                        "type": "string",
+                        "default": "workbench.view.explorer",
+                        "description": "Add the vscode command (from keyboard bindings) that correlates to what you wish to see at debug stop in the *explorer* area."
+                    },
+                    "teamEssentials.debug.stop.terminatePreLaunchTask": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Configure if you wish to terminate the prelaunch task."
+                    }
+                }
+            }
+        ],
+        "jsonValidation": [
+            {
+                "fileMatch": "team.json",
+                "url": "./src/schemas/team.json"
+            },
+            {
+                "fileMatch": ".vscode/team/settings.json",
+                "url": "./src/schemas/settings.json"
+            },
+            {
+                "fileMatch": "extensions.json",
+                "url": "./src/schemas/extensions.json"
+            },
+            {
+                "fileMatch": ".vscode/team/debug.json",
+                "url": "./src/schemas/debug.json"
+            },
+            {
+                "fileMatch": ".vscode/team/filters.json",
+                "url": "./src/schemas/filters.json"
+            }
+        ],
+        "commands": [
+            {
+                "command": "teamEssentials.selectShell",
+                "title": "Team Essentials: Change Windows Shell"
+            },
+            {
+                "command": "teamEssentials.filterExplorer",
+                "title": "Team Essentials: Filter Explorer"
+            },
+            {
+                "command": "teamEssentials.updateExtensions",
+                "title": "Team Essentials: Update Team Extensions"
+            },
+            {
+                "command": "teamEssentials.applyTeamSettings",
+                "title": "Team Essentials: Apply Team Settings"
+            },
+            {
+                "command": "teamEssentials.configWizard",
+                "title": "Team Essentials: Configuration Wizard"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "teamEssentials.debugStop",
+                "key": "shift+F5",
+                "when": "editorTextFocus"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.85",
+        "@types/mocha": "^2.2.44",
+        "@types/node": "^6.0.92",
+        "mocha": "^4.0.1",
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.7"
+    },
+    "dependencies": {
+        "jsonc-parser": "^1.0.0",
+        "lodash": "^4.17.4",
+        "run-in-terminal": "0.0.3"
+    }
 }
