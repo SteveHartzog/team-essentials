@@ -149,10 +149,10 @@ export default class Folder {
             break;
         }
         if (cli) {
-          let workspaceShell = config.getGlobal('terminal.integrated.shell.windows', true);
+          let workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
           if (cli !== workspaceShell) {
             // Save to workspace in multi-root, global if not
-            config.setGlobal('terminal.integrated.shell.windows', cli, env.isMultiRootWorkspace())
+            config.setGlobal('terminal.integrated.shell.windows', cli)
             this.restartShell();
           }
         }
