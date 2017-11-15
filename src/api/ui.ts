@@ -91,17 +91,17 @@ export enum LogLevel {
   /**
    * Show All
    */
-  verbose,
+  verbose = 'verbose',
 
   /**
    * Show info & errors
    */
-  info,
+  info = 'info',
 
   /**
    * Show only errors
    */
-  errors
+  errors = 'errors'
 }
 export class Output {
   private static _outputChannel: OutputChannel;
@@ -111,8 +111,18 @@ export class Output {
     this._outputChannel = outputChannel;
   }
 
-  public static setLogLevel(logLevel: LogLevel) {
-    this._logLevel = logLevel;
+  public static setLogLevel(logLevel: string) {
+    switch (logLevel) {
+      case LogLevel.info:
+        this._logLevel = LogLevel.info;
+        break;
+      case LogLevel.errors:
+        this._logLevel = LogLevel.errors;
+        break;
+      case LogLevel.verbose:
+        this._logLevel = LogLevel.verbose;
+        break;
+    }
   }
 
   public static show() {

@@ -83,6 +83,11 @@
         "type": "object",
         "title": "Team Essentials",
         "properties": {
+          "teamEssentials.logLevel": {
+            "type": "string",
+            "default": false,
+            "description": "Set's the logging level: 'error', 'info', 'verbose'"
+          },
           "teamEssentials.disableWelcome": {
             "type": "boolean",
             "default": false,
@@ -206,10 +211,10 @@
   "devDependencies": {
     "@types/lodash": "^4.14.85",
     "@types/mocha": "^2.2.44",
-    "@types/node": "^8.0.51",
+    "@types/node": "^6.0.92",
     "mocha": "^4.0.1",
     "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "vscode": "^1.1.7"
   },
   "dependencies": {
     "comment-json": "^1.1.3",

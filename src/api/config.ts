@@ -171,6 +171,25 @@ export default class Configuration {
     return value.globalValue;
   }
 
+  static getLogLevel(fromWorkspace = false) {
+    let level = this.getGlobal('teamEssentials.logLevel', env.isMultiRootWorkspace());
+    if (!level) {
+      return UI.LogLevel.info;
+    } else {
+      switch (level) {
+        case UI.LogLevel.info:
+          level = UI.LogLevel.info;
+          break;
+        case UI.LogLevel.errors:
+          level = UI.LogLevel.errors;
+          break;
+        case UI.LogLevel.verbose:
+          level = UI.LogLevel.verbose;
+          break;
+      }
+    }
+  }
+
   static load(workspacePath, isMultiRootWorkspace: boolean = true, isOldConfig: boolean = false) {
     if (isOldConfig) {
       let oldTeamConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));

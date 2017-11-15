@@ -158,7 +158,7 @@ const cmd = {
 export const activate = (context: ExtensionContext) => {
   // Initialize the output channel
   out.setChannel(window.createOutputChannel("Team Essentials"));
-  out.setLogLevel(API.Enums.LogLevel.info);
+  out.setLogLevel(config.getLogLevel(env.isMultiRootWorkspace()));
   out.info('Team Essentials starting.');
 
   let currentlyInstalledVersion = config.getGlobal('teamEssentials.currentVersion');
