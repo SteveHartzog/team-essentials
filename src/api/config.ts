@@ -163,9 +163,9 @@ export default class Configuration {
 
   static getGlobal(section: string, fromWorkspace = false) {
     let value = workspace.getConfiguration(null, env.getResource()).inspect(section);
-    if (fromWorkspace && value.defaultValue) {
-      UI.Output.log(`getGlobal('${section}'): ${value.defaultValue}`);
-      return value.defaultValue;
+    if (fromWorkspace && value.workspaceValue) {
+      UI.Output.log(`getGlobal('${section}'): ${value.workspaceValue}`);
+      return value.workspaceValue;
     }
     UI.Output.log(`getGlobal('${section}'): ${value.globalValue}`);
     return value.globalValue;
