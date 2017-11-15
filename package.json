@@ -217,8 +217,8 @@
     "vscode": "^1.1.7"
   },
   "dependencies": {
-    "comment-json": "^1.1.3",
-    "run-in-terminal": "0.0.3",
-    "lodash": "^4.17.4"
+    "jsonc-parser": "^1.0.0",
+    "lodash": "^4.17.4",
+    "run-in-terminal": "0.0.3"
   }
 }

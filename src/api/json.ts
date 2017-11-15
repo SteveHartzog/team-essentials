@@ -1,5 +1,5 @@
 import * as io from './io';
-import * as json from 'comment-json';
+import * as jsonc from 'jsonc-parser';
 import { writeFileSync } from 'fs';
 import * as UI from './ui';
 
@@ -10,7 +10,7 @@ export function getConfig(filePath: string): JSON {
     if (data.length === 0) {
       return JSON.parse('{}');
     } else {
-      return json.parse(data, null, true);
+      return jsonc.parse(data, null, { disallowComments: true });
     }
   } catch (error) {
     if (error instanceof Error && error['code'] === 'ENOENT') {
@@ -22,7 +22,7 @@ export function getConfig(filePath: string): JSON {
 }
 
 export function stringify(data): string {
-  return json.stringify(data, null, 2);
+  return JSON.stringify(data, null, 2);
 }
 
 
