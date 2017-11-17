@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, createReadStream } from 'fs';
+import { isEmpty } from 'lodash';
 import * as rd from 'readline'
 
 export function getFile(filePath: string) {
@@ -30,5 +31,7 @@ export async function readFile(filePath: string) {
 }
 
 export function saveFile(filePath: string, data) {
-  writeFileSync(filePath, data);
+  if (!isEmpty(data)) {
+    writeFileSync(filePath, data);
+  }
 }
