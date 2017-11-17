@@ -1,7 +1,7 @@
 {
     "name": "team-essentials",
-    "displayName": "Team Essentials \u2014 Filter Explorer, Change Windows Shell, Modify Debug layouts",
-    "version": "1.0.1",
+    "displayName": "Team Essentials — Filter Explorer, Change Windows Shell, Modify Debug layouts",
+    "version": "1.0.2",
     "author": "SteveHartzog",
     "publisher": "SteveHartzog",
     "description": "Filter your explorer view (statusbar shows current filter) with customizable team-wide filters, change your integrated terminal (shell) by simply selecting it, change the window layout on debug start and stop, team settings override local workspace settings.",
