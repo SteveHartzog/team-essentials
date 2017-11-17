@@ -1,13 +1,12 @@
-import { OutputChannel, commands, workspace as workspace, window } from 'vscode';
-import * as Utils from './api';
 import { clone } from 'lodash';
+import { commands, window, workspace, OutputChannel } from 'vscode';
+import * as Utils from './api';
 
-export default class Debug {
+export class Debug {
   static async start() {
-    let config = Utils.Configuration;
-
-    let teamEssentials = config.loadTeamEssentials();
-    let debugStart = teamEssentials['debug']['start']
+    const config = Utils.Configuration;
+    const teamEssentials = config.loadTeamEssentials();
+    const debugStart = teamEssentials['debug']['start'];
     // Debug Start: switch to custom view (output)
     commands.executeCommand(debugStart.output);
 
@@ -16,11 +15,11 @@ export default class Debug {
   }
 
   static async stop() {
-    let config = Utils.Configuration;
-    let output = Utils.UI.Output;
+    const config = Utils.Configuration;
+    const output = Utils.UI.Output;
 
-    let teamEssentials = config.loadTeamEssentials();
-    let debugStop = teamEssentials['debug']['stop']
+    const teamEssentials = config.loadTeamEssentials();
+    const debugStop = teamEssentials['debug']['stop'];
 
     // Stop server debugger
     await commands.executeCommand('workbench.action.debug.stop');

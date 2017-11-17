@@ -1,12 +1,12 @@
-import { OutputChannel, MessageItem as _MessageItem, QuickPickItem, StatusBarAlignment, StatusBarItem, ViewColumn, window } from 'vscode';
 import { clone } from 'lodash';
+import { window, MessageItem as _MessageItem, OutputChannel, QuickPickItem, StatusBarAlignment, StatusBarItem, ViewColumn } from 'vscode';
+import { Configuration as config } from './config';
 import * as misc from './misc';
-import { default as config } from './config';
 
 export enum MessageType { Error, Info, Warning }
 export class Controls {
   public static async ShowChoices(question: string, choices: Choice[], callback: Function) {
-    let choice = await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true });
+    const choice = await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true });
     await callback(choice);
   }
 
@@ -43,9 +43,9 @@ export class Statusbar {
   private static statusBarItem: StatusBarItem;
 
   public static create() {
-    let teamEssentials = config.loadTeamEssentials();
+    const teamEssentials = config.loadTeamEssentials();
     this.statusBarItem = window.createStatusBarItem(
-      teamEssentials['statusbar.align'] == "left"
+      teamEssentials['statusbar.align'] === 'left'
         ? StatusBarAlignment.Left
         : StatusBarAlignment.Right,
       teamEssentials['statusbar.priority'] > -1
@@ -57,8 +57,8 @@ export class Statusbar {
   }
 
   public static updateConfig() {
-    let texts = this.statusBarItem.text.split(")");
-    let text = texts[texts.length - 1].trim();
+    const texts = this.statusBarItem.text.split(')');
+    const text = texts[texts.length - 1].trim();
     // Destroy current
     this.statusBarItem.dispose();
     this.create();
@@ -73,12 +73,12 @@ export class Statusbar {
     if (settings['statusbar.hideIcon']) {
       this.statusBarItem.text = text;
     } else {
-      let icon = settings['statusbar.icon']
+      const icon = settings['statusbar.icon']
         ? settings['statusbar.icon']
-        : "search";
-      this.statusBarItem.text = '$(' + icon + ')  ' + text;
+        : 'search';
+      this.statusBarItem.text = `$(${icon})  ${text}`;
     }
-    if (settings['statusbar.disable'] != false) {
+    if (settings['statusbar.disable'] !== false) {
       this.statusBarItem.show();
     }
   }
@@ -161,7 +161,7 @@ export class Output {
   }
 
   private static appendLine() {
-    let line = '________________________________________________________________________________';
+    const line = '________________________________________________________________________________';
     this.append(line, '', true, false);
   }
 }

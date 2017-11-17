@@ -1,11 +1,12 @@
-import { Environment } from './index';
-import { ConfigurationTarget, Uri, workspace, window, ViewColumn, TextEdit, WorkspaceEdit, Position, Range } from 'vscode';
+import { forEach, isEmpty } from 'lodash';
 import { join } from 'path';
-import { isEmpty, forEach } from 'lodash';
-import * as json from './json';
+import { window, workspace, ConfigurationTarget, Position, Range, TextEdit, Uri, ViewColumn, WorkspaceEdit } from 'vscode';
+
 import * as env from './environment';
-import * as UI from './ui'
 import { isMultiRootWorkspace } from './environment';
+import { Environment } from './index';
+import * as json from './json';
+import * as UI from './ui';
 
 /**
  * List of all the configuration files
@@ -60,7 +61,7 @@ export enum ConfigurationFiles {
  */
   legacyState = '.vscode/user.json'
 }
-export default class Configuration {
+export class Configuration {
   private static _globalSettings;
   private static _defaultStatusbarConfig = {
     disable: false,
@@ -83,14 +84,14 @@ export default class Configuration {
   private static _filters = {
     default: {},
     dev: {
-      'node_modules': true,
+      node_modules: true,
       '.gitignore': true,
       '.stylelintrc': true,
       '.editorconfig': true,
       '.vscode': true,
       'package.json': true,
       'package-lock.json': true,
-      'LICENSE': true,
+      LICENSE: true,
       'README.md': true
     },
     admin: {}
@@ -108,7 +109,7 @@ export default class Configuration {
   static save(workspacePath, config: ConfigurationFiles, object: Object, isOldConfig: boolean = false) {
     UI.Output.log(`Saving: '${config}' to '${workspacePath}'`);
 
-    let data = json.stringify(object);
+    const data = json.stringify(object);
     switch (config) {
       case ConfigurationFiles.filters:
         json.write(join(workspacePath, ConfigurationFiles.filters), data);
@@ -124,7 +125,7 @@ export default class Configuration {
 
       case ConfigurationFiles.state:
         if (isOldConfig) {
-          let user = {};
+          const user = {};
           user['defaults.applied'] = object['settings'];
           user['extensions.required.installed'] = object['extensions'];
           user['explorer.filter'] = object['filter'];
@@ -137,7 +138,7 @@ export default class Configuration {
 
       case ConfigurationFiles.teamEssentials:
         if (env.isMultiRootWorkspace()) {
-          let teamEssentialsConfig = workspace.getConfiguration('teamEssentials');
+          const teamEssentialsConfig = workspace.getConfiguration('teamEssentials');
           teamEssentialsConfig.update('debug', data['debug'], ConfigurationTarget.Workspace);
           teamEssentialsConfig.update('statusbar', data['statusbar'], ConfigurationTarget.Workspace);
         } else {
@@ -162,7 +163,7 @@ export default class Configuration {
   }
 
   static getGlobal(section: string, fromWorkspace = false) {
-    let value = workspace.getConfiguration(null, env.getResource()).inspect(section);
+    const value = workspace.getConfiguration(null, env.getResource()).inspect(section);
     if (fromWorkspace && value.workspaceValue) {
       UI.Output.log(`getGlobal('${section}'): ${value.workspaceValue}`);
       return value.workspaceValue;
@@ -192,8 +193,8 @@ export default class Configuration {
 
   static load(workspacePath, isMultiRootWorkspace: boolean = true, isOldConfig: boolean = false) {
     if (isOldConfig) {
-      let oldTeamConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
-      let oldStateConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyState));
+      const oldTeamConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
+      const oldStateConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyState));
       return {
         extensions: this._loadExtensions(workspacePath, oldTeamConfig),
         filters: oldTeamConfig['explorer.filters'],
@@ -205,7 +206,7 @@ export default class Configuration {
         teamSettings: oldTeamConfig['defaults'],
         folderSettings: json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings)),
         teamEssentials: this.loadTeamEssentials(workspacePath, oldTeamConfig, isMultiRootWorkspace)
-      }
+      };
     }
     return {
       extensions: this._loadExtensions(workspacePath),
@@ -223,20 +224,20 @@ export default class Configuration {
       extensions['required'] = oldConfig['extensions.required'];
     }
     if (isEmpty(extensions)) {
-      extensions = JSON.parse('{}');;
+      extensions = JSON.parse('{}');
     }
     return extensions;
   }
 
   static loadTeamEssentials(workspacePath?: string, oldConfig?: object, isMultiRootWorkspace: boolean = true) {
     if (oldConfig && workspacePath) {
-      let teamEssentialsConfig = this._parseOldDebugSettings(oldConfig);
+      const teamEssentialsConfig = this._parseOldDebugSettings(oldConfig);
       // Add new default settings for the statusbar
       teamEssentialsConfig['statusbar'] = this._defaultStatusbarConfig;
     } else {
       if (isMultiRootWorkspace) {
         // Start with the defaults (provided by `package.json`['contributes.configuration']), then override
-        let teamEssentialsConfig = workspace.getConfiguration('teamEssentials');
+        const teamEssentialsConfig = workspace.getConfiguration('teamEssentials');
         return {
           debug: teamEssentialsConfig.debug,
           statusbar: teamEssentialsConfig.statusbar
@@ -249,10 +250,10 @@ export default class Configuration {
   }
 
   static async migrateConfigs(workspacePath: string, isMultiRootWorkspace: boolean = true) {
-    let exists = env.createDirectory(join(workspacePath, '.vscode/team-essentials'))
+    const exists = env.createDirectory(join(workspacePath, '.vscode/team-essentials'));
     if (exists) {
-      let oldConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
-      let oldState = json.getConfig(join(workspacePath, ConfigurationFiles.legacyState));
+      const oldConfig = json.getConfig(join(workspacePath, ConfigurationFiles.legacyTeam));
+      const oldState = json.getConfig(join(workspacePath, ConfigurationFiles.legacyState));
       if (!oldConfig.hasOwnProperty('defaults')) {
         oldConfig['defaults'] = JSON.parse('{}');
       }
@@ -272,9 +273,9 @@ export default class Configuration {
 
       // Team Settings migration
       if (isMultiRootWorkspace) {
-        let settings = oldConfig['defaults'];
-        for (let setting in settings) {
-          console.log(`adding setting: '${setting}': '${settings[setting]}'`)
+        const settings = oldConfig['defaults'];
+        for (const setting in settings) {
+          console.log(`adding setting: '${setting}': '${settings[setting]}'`);
           this.setGlobal(setting, settings[setting], true);
         }
       } else {
@@ -297,14 +298,14 @@ export default class Configuration {
     out.info('Creating default configs.', 'running: ');
 
     // Create _state.json, then save to .vscode/team-essentials
-    let state = {
+    const state = {
       extensions: true,
       filter: 'admin'
-    }
+    };
     this.save(workspacePath, ConfigurationFiles.state, state);
 
     // Create debug.json, then save to .vscode/team-essentials
-    let debug = {
+    const debug = {
       start: {
         output: 'workbench.debug.action.focusRepl',
         explorer: 'workbench.view.debug'
@@ -314,14 +315,14 @@ export default class Configuration {
         explorer: 'workbench.view.explorer',
         terminatePreLaunchTask: true
       }
-    }
+    };
     this.save(workspacePath, ConfigurationFiles.teamEssentials, debug);
 
     // Create filters.json, then save to .vscode/team-essentials
     this.save(workspacePath, ConfigurationFiles.filters, this._filters);
 
     // Team Settings migration
-    let folderSettings = json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings));
+    const folderSettings = json.getConfig(join(workspacePath, ConfigurationFiles.folderSettings));
     if (isMultiRootWorkspace) {
       forEach(folderSettings, (value, key) => { this.setGlobal(key, value, true); });
     } else {
@@ -332,23 +333,23 @@ export default class Configuration {
   public static insertGitIgnoreSettings(workspacePath: string) {
     workspace.openTextDocument(join(workspacePath, '.gitignore')).then((gitignore) => {
       window.showTextDocument(gitignore, ViewColumn.One, true);
-      let coords = { start: { line: gitignore.lineCount + 1, char: 0 }, end: { line: gitignore.lineCount + 5, char: 0 } };
-      let edit = new WorkspaceEdit();
-      let start = new Position(coords.start.line, coords.start.char);
-      let end = new Position(coords.end.line, coords.end.char);
-      let range = new Range(start, end);
-      let change = new TextEdit(range, '\n\n## Team Essentials ##\n#####################\n.vscode/settings.json\n.vscode/team-essentials/state.json\n');
+      const coords = { start: { line: gitignore.lineCount + 1, char: 0 }, end: { line: gitignore.lineCount + 5, char: 0 } };
+      const edit = new WorkspaceEdit();
+      const start = new Position(coords.start.line, coords.start.char);
+      const end = new Position(coords.end.line, coords.end.char);
+      const range = new Range(start, end);
+      const change = new TextEdit(range, '\n\n## Team Essentials ##\n#####################\n.vscode/settings.json\n.vscode/team-essentials/state.json\n');
       edit.set(gitignore.uri, [change]);
       workspace.applyEdit(edit);
     });
   }
 
   private static _parseOldDebugSettings(oldSettings: object) {
-    let teamEssentials = {};
+    const teamEssentials = {};
     // Did an old debug setting exist?
     if (oldSettings.hasOwnProperty('debug')) {
-      let debugStart = oldSettings['debug'].hasOwnProperty('start') ? oldSettings['debug']['start'] : {};
-      let debugStop = oldSettings['debug'].hasOwnProperty('stop') ? oldSettings['debug']['stop'] : {};
+      const debugStart = oldSettings['debug'].hasOwnProperty('start') ? oldSettings['debug']['start'] : {};
+      const debugStop = oldSettings['debug'].hasOwnProperty('stop') ? oldSettings['debug']['stop'] : {};
       teamEssentials['debug'] = {
         'start.output': debugStart.hasOwnProperty('output') ? debugStart['output'] : '',
         'start.explorer': debugStart.hasOwnProperty('explorer') ? debugStart['explorer'] : '',

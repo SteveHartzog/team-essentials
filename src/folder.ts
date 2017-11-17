@@ -1,7 +1,7 @@
-import { commands, extensions, Uri, QuickPickItem, window, workspace, OutputChannel } from 'vscode';
 import { clone, isEmpty, remove } from 'lodash';
-import { join } from 'path';
 import { homedir, platform } from 'os';
+import { join } from 'path';
+import { commands, extensions, window, workspace, OutputChannel, QuickPickItem, Uri } from 'vscode';
 
 // Utilities Namespace
 import * as API from './api';
@@ -38,7 +38,7 @@ enum ShellLocations {
   HyperWithCmd = 'C:\\Windows\\sysnative\\cmd.exe',
   HyperWithBash = 'C:\\WINDOWS\\Sysnative\\bash.exe'
 }
-export default class Folder {
+export class Folder {
   public name: string;
   public config;
   public path;
@@ -81,14 +81,14 @@ export default class Folder {
 
   public updateStatusBar() {
     if (this.config && this.config.filters && Object.keys(this.config.filters).length > 0) {
-      let prefix = "";
+      let prefix = '';
       if (this.isMultiRootWorkspace) {
-        prefix = misc.titleCase(this.name) + ": ";
+        prefix = misc.titleCase(this.name) + ': ';
       }
       if (this._filter && this._filter.length > 0) {
         statusbar.setText(prefix + misc.titleCase(this._filter), this.config.teamEssentials);
       } else {
-        statusbar.setText(prefix + "< Select a Filter >", this.config.teamEssentials);
+        statusbar.setText(prefix + '< Select a Filter >', this.config.teamEssentials);
       }
     } else {
       statusbar.hide();
@@ -96,7 +96,7 @@ export default class Folder {
   }
 
   public applyTeamSettings(reApply: boolean = false) {
-    let needSettingsSave = false;
+    const needSettingsSave = false;
     if (!isEmpty(this.config.teamSettings)) {
       // Have settings not been applied already, or are we overriding (manual call)?
       if (reApply ||
@@ -105,7 +105,7 @@ export default class Folder {
       ) {
         // Check to see of team defaults exist, if so add them to our folderSettings
         if (!isEmpty(this.config.teamSettings)) {
-          for (let setting in this.config.teamSettings) {
+          for (const setting in this.config.teamSettings) {
             this.config.folderSettings[setting] =
               this.config.teamSettings[setting];
           }
@@ -149,10 +149,10 @@ export default class Folder {
             break;
         }
         if (cli) {
-          let workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
+          const workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
           if (cli !== workspaceShell) {
             // Save to workspace in multi-root, global if not
-            config.setGlobal('terminal.integrated.shell.windows', cli)
+            config.setGlobal('terminal.integrated.shell.windows', cli);
             this.restartShell();
           }
         }
@@ -175,7 +175,7 @@ export default class Folder {
 
   //#region Extensions
   public ensureRequiredExtensions() {
-    let state = clone(this.config.state);
+    const state = clone(this.config.state);
     if (!state.hasOwnProperty('extensions') || (state.hasOwnProperty('extensions') && state['extensions'] === false)) {
       out.log(`Required extensions not installed for workspace '${this.name}'.`);
       this.installRequiredExtensions();
@@ -193,10 +193,10 @@ export default class Folder {
   }
 
   public updateExtensions() {
-    let options = [];
+    const options = [];
     if (!isEmpty(this.config.extensions)) {
       if (this.config.extensions.hasOwnProperty('recommendations')) {
-        options.push(new Choice('Recommended', ''))
+        options.push(new Choice('Recommended', ''));
       }
       // if required extensions provided in `.vscode/extensions.json`
       if (this.config.extensions.hasOwnProperty('required')) {
@@ -207,7 +207,7 @@ export default class Folder {
       options.push(new Choice('All', 'Install both recommended and required extensions.'));
     }
     if (options.length > 0) {
-      let updateType = controls.ShowChoices('Update which extensions?', options, (updateType) => {
+      const updateType = controls.ShowChoices('Update which extensions?', options, (updateType) => {
         if (updateType) {
           switch (updateType.label) {
             case 'Required':
@@ -228,7 +228,7 @@ export default class Folder {
   }
 
   private installRecommendedExtensions() {
-    let recommendedExtensions = clone(this.config.extensions)['recommendations'];
+    const recommendedExtensions = clone(this.config.extensions)['recommendations'];
     out.info('Requesting recommended team extensions.', 'running: ');
     if (recommendedExtensions && recommendedExtensions.length > 0) {
       this.requestInstallations(recommendedExtensions);
@@ -249,7 +249,7 @@ export default class Folder {
   }
 
   private requestInstallations(requestedExtensions) {
-    for (let extension of requestedExtensions) {
+    for (const extension of requestedExtensions) {
       if (extensions.getExtension(extension) === undefined) {
         out.continue(`Requesting: ${extension}`);
         exe.runCommand('code', this.path, ['--install-extension', extension]);
@@ -264,7 +264,7 @@ export default class Folder {
   }
 
   set filter(newFilter) {
-    out.log(`Setting filter: '${newFilter}'`)
+    out.log(`Setting filter: '${newFilter}'`);
     if (this._filter !== newFilter) {
       this.changeFilter(newFilter);
       this.updateStatusBar();
@@ -273,7 +273,7 @@ export default class Folder {
   public filterExplorer() {
     if (this.path) {
       // build the quickPick to get the newFilter
-      let header = "Select an explorer filter";
+      let header = 'Select an explorer filter';
       header +=
         this.isMultiRootWorkspace
           ? ` for the ${this.name} workspace:`
@@ -290,10 +290,10 @@ export default class Folder {
   }
 
   public getFilterNames() {
-    let filters = clone(this.config.filters);
-    let choices = new Array();
-    for (let choice in filters) {
-      if (choice != 'default') {
+    const filters = clone(this.config.filters);
+    const choices = new Array();
+    for (const choice in filters) {
+      if (choice !== 'default') {
         choices.push(new Choice(misc.titleCase(choice), ''));
       }
     }
@@ -301,21 +301,21 @@ export default class Folder {
   }
 
   private changeFilter(choice) {
-    let filters = clone(this.config.filters);
-    let state = clone(this.config.state);
-    let folderSettings = clone(this.config.folderSettings);
+    const filters = clone(this.config.filters);
+    const state = clone(this.config.state);
+    const folderSettings = clone(this.config.folderSettings);
 
     // Clear any existing filter
     folderSettings['files.exclude'] = {};
 
     if (choice && filters) {
-      for (let filter in filters) {
+      for (const filter in filters) {
         // Apply chosen filter... but always apply default filter
         if (
           filter.toLowerCase() === choice.toLowerCase() ||
           filter.toLowerCase() === 'default'
         ) {
-          for (let exclude in filters[filter.toLowerCase()]) {
+          for (const exclude in filters[filter.toLowerCase()]) {
             if (typeof filters[filter.toLowerCase()][exclude] === 'boolean') {
               folderSettings['files.exclude'][exclude] = true;
             } else {

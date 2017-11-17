@@ -4,21 +4,16 @@
     "alwaysStrict": true,
     "target": "es6",
     "outDir": "out",
-    "lib": [
-      "es6"
-    ],
+    "lib": [ "es6" ],
     "sourceMap": true,
     "rootDir": ".",
-    "types": [
-      "node",
-      "lodash",
-      "vscode"
-    ]
+    "types": [ "node", "lodash", "vscode" ]
   },
   "exclude": [
     "node_modules",
     ".vscode-test",
     "./src/commands/_*",
-    "./test"
+    "./test",
+    "**/_*"
   ]
 }

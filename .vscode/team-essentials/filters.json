@@ -1,7 +1,6 @@
 {
   "default": {
     // Build Dirs
-    "README.md": true,
     "out": "true",
     // Package Dirs
     "node_modules": true

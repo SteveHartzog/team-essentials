@@ -1,16 +1,16 @@
 import { join } from 'path';
+import { commands, workspace, Uri, WorkspaceFolder } from 'vscode';
 import * as API from './index';
-import { commands, Uri, workspace, WorkspaceFolder } from 'vscode';
 
 export async function NewUserConfiguration() {
-  let folderPath = API.Environment.getRootFolderPath();
+  const folderPath = API.Environment.getRootFolderPath();
 
-  let config = API.Configuration;
-  let env = API.Environment;
-  let out = API.UI.Output;
-  let controls = API.UI.Controls;
-  let Choice = API.UI.Choice;
-  let MessageType = API.Enums.MessageType;
+  const config = API.Configuration;
+  const env = API.Environment;
+  const out = API.UI.Output;
+  const controls = API.UI.Controls;
+  const Choice = API.UI.Choice;
+  const MessageType = API.Enums.MessageType;
 
   // Offer to setup for first time user
   await controls.ShowChoices('Team Essentials: New User Wizard > Would you like to continue?', [
@@ -19,11 +19,10 @@ export async function NewUserConfiguration() {
       'The wizard will create a (4) configuration files.')
   ], async (choice) => {
     out.log(`Automatic configuration requested...`);
-    let completionMessage;
     if (choice && choice.label === 'Yes') {
       // Create & Save default configs
       await workspace.workspaceFolders.forEach(async (folder: WorkspaceFolder) => {
-        let configDir = join(folder.uri.fsPath, '.vscode/team-essentials');
+        const configDir = join(folder.uri.fsPath, '.vscode/team-essentials');
         if (env.createDirectory(configDir)) {
           out.log(`Team Essentials folder created @ '${configDir}`);
           config.createDefaultConfigs(folder.uri.fsPath);
@@ -38,7 +37,7 @@ export async function NewUserConfiguration() {
                 'These are necessary so that each team developer can select their own explorer filter.')
             ], (choice) => {
               let completionMessage;
-              if (choice && choice.label == 'Yes') {
+              if (choice && choice.label === 'Yes') {
                 out.log(`Updating .gitignore...`);
                 config.insertGitIgnoreSettings(folder.uri.fsPath);
                 completionMessage = 'Setup complete! Please see the docs for how to customize the config.';
@@ -46,7 +45,7 @@ export async function NewUserConfiguration() {
                 completionMessage = 'Please update your `.gitignore` so explorer filters will not be committed.';
               }
               controls.ShowMessage(MessageType.Info, completionMessage, ['View Documentation']).then((choice) => {
-                if (choice && choice == 'View Documentation') {
+                if (choice && choice === 'View Documentation') {
                   commands.executeCommand('vscode.open', Uri.parse('https://github.com/SteveHartzog/team-essentials/wiki'));
                 }
               });
@@ -56,7 +55,7 @@ export async function NewUserConfiguration() {
       });
     } else {
       await controls.ShowMessage(MessageType.Info, 'Your setup was canceled.', ['View Documentation']).then((choice) => {
-        if (choice && choice == 'View Documentation') {
+        if (choice && choice === 'View Documentation') {
           commands.executeCommand('vscode.open', Uri.parse('https://github.com/SteveHartzog/team-essentials/wiki'));
         }
       });
@@ -70,7 +69,7 @@ export async function MigrateConfiguration(folders: WorkspaceFolder[], reload = 
   const controls = API.UI.Controls;
   const MessageType = API.Enums.MessageType;
   const Choice = API.UI.Choice;
-  let choices = [
+  const choices = [
     new Choice('No', 'Don\'t migrate my configuration automatically.'),
     new Choice('Yes', 'Migrate my configuration automatically.',
       'This will migrate your configuration into the `.vscode/team-essentials` folder.')
@@ -87,7 +86,7 @@ export async function MigrateConfiguration(folders: WorkspaceFolder[], reload = 
       completionMessage = 'Your configuration migration was canceled.';
     }
     controls.ShowMessage(MessageType.Info, completionMessage, ['View Documentation']).then((choice) => {
-      if (choice && choice == 'View Documentation') {
+      if (choice && choice === 'View Documentation') {
         commands.executeCommand('vscode.open', Uri.parse('https://github.com/SteveHartzog/team-essentials/wiki'));
       }
     });

@@ -3,8 +3,8 @@ import * as env from './environment';
 import * as exe from './execute';
 import * as io from './io';
 import * as json from './json';
-import * as ui from './ui';
 import * as misc from './misc';
+import * as ui from './ui';
 import * as wiz from './wizard';
 
 // Has multiple classes without a default, but because we have an enum we need to split out export
@@ -13,7 +13,7 @@ export const UI = {
   Output: ui.Output,
   Controls: ui.Controls,
   Choice: ui.Choice
-}
+};
 
 // Extract and wrap enums
 export const Enums = {
@@ -23,7 +23,7 @@ export const Enums = {
 };
 
 // Has one default but two exports
-export const Configuration = config.default;
+export const Configuration = config.Configuration;
 
 // Normal export default
 export const Environment = env;

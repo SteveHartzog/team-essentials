@@ -1,9 +1,9 @@
-import { Uri, window, workspace } from 'vscode';
-import * as vscode from 'vscode';
 import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
 import { homedir, platform } from 'os';
-import { default as config, ConfigurationFiles } from './config';
+import { join } from 'path';
+import { window, workspace, Uri } from 'vscode';
+import * as vscode from 'vscode';
+import { Configuration as config, ConfigurationFiles } from './config';
 import * as UI from './ui';
 
 /**
@@ -27,19 +27,19 @@ enum Platform {
 }
 
 export function isMultiRootWorkspace() {
-  let value = (workspace.workspaceFolders && workspace.workspaceFolders.length > 1)
+  const value = (workspace.workspaceFolders && workspace.workspaceFolders.length > 1);
   UI.Output.log(`isMultiRootWorkspace: ${value}`);
   return value;
 }
 
 export function hasConfig(name: string, folderPath: string) {
-  let value = this.confirmPath(this.getTeamPath(folderPath));
+  const value = this.confirmPath(this.getTeamPath(folderPath));
   UI.Output.log(`hasConfig('${name}'): ${value}`);
   return value;
 }
 
 export function hasOldConfig(name: string, folderPath: string) {
-  let value = this.confirmPath(this.getOldTeamFilePath(join(folderPath)));
+  const value = this.confirmPath(this.getOldTeamFilePath(join(folderPath)));
   UI.Output.log(`hasOldConfig('${name}'): ${value}`);
   return value;
 }
@@ -47,9 +47,9 @@ export function hasOldConfig(name: string, folderPath: string) {
 export function hasFilters(isMultiRootWorkspace: boolean) {
   UI.Output.log('Checking if env hasFilters...');
   if (isMultiRootWorkspace) {
-    for (let folder in vscode.workspace.workspaceFolders) {
+    for (const folder in vscode.workspace.workspaceFolders) {
       if (this.hasFilter(vscode.workspace.workspaceFolders[folder].uri.fsPath)) {
-        UI.Output.continue(`found filters @ '${vscode.workspace.workspaceFolders[folder].name}'`)
+        UI.Output.continue(`found filters @ '${vscode.workspace.workspaceFolders[folder].name}'`);
         return true;
       }
     }
@@ -64,8 +64,8 @@ export function hasFilter(folderPath: string) {
 }
 
 export function isNewUser() {
-  let folders = workspace.workspaceFolders;
-  for (let folder of folders) {
+  const folders = workspace.workspaceFolders;
+  for (const folder of folders) {
     if (folder.uri) {
       UI.Output.log('isNewUser(): false');
       return false;
@@ -76,7 +76,7 @@ export function isNewUser() {
 }
 
 export function isWindows() {
-  let value = platform() == Platform.windows;
+  const value = platform() === Platform.windows;
   UI.Output.log(`Checking isWindows(): ${value}`);
   return value;
 }
@@ -87,16 +87,16 @@ export function getRootFolderPath() {
 
 export function getResource() {
   if (window.activeTextEditor) {
-    return window.activeTextEditor.document.uri
+    return window.activeTextEditor.document.uri;
   } else {
     // use last workspace path if null
-    let index = workspace.workspaceFolders.length > 0 ? workspace.workspaceFolders.length - 1 : 0;
+    const index = workspace.workspaceFolders.length > 0 ? workspace.workspaceFolders.length - 1 : 0;
     return workspace.workspaceFolders[index].uri;
   }
 }
 
 export function getWorkspaceFolderId(uri: Uri) {
-  let workspaceFolder = workspace.getWorkspaceFolder(uri);
+  const workspaceFolder = workspace.getWorkspaceFolder(uri);
   UI.Output.log(`Getting Folder ID: '${uri.fsPath}' => ${workspaceFolder.index}`);
   return workspaceFolder.index;
 }
@@ -114,7 +114,7 @@ export function getTeamPath(workspacePath): string {
 }
 
 export function confirmPath(path: string): boolean {
-  let value = existsSync(path);
+  const value = existsSync(path);
   UI.Output.log(`confirmPath('${path}'): ${value}`);
   return value;
 }

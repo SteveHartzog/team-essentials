@@ -1,15 +1,15 @@
-import { readFileSync, writeFileSync, createReadStream } from 'fs';
+import { createReadStream, readFileSync, writeFileSync } from 'fs';
 import { isEmpty } from 'lodash';
-import * as rd from 'readline'
+import * as rd from 'readline';
 
 export function getFile(filePath: string) {
-  let data = readFileSync(filePath, 'utf8');
+  const data = readFileSync(filePath, 'utf8');
   return (data.length > 0) ? data : null;
 }
 
 export function getFileLineArray(filePath: string) {
-  let array = this.getFile(filePath).split('\n');
-  let lineArray = [];
+  const array = this.getFile(filePath).split('\n');
+  const lineArray = [];
   for (let line of array) {
     line = line.trim();
     lineArray.push(line);
@@ -18,9 +18,9 @@ export function getFileLineArray(filePath: string) {
 }
 
 export async function readFile(filePath: string) {
-  var reader = rd.createInterface(createReadStream(filePath))
+  const reader = rd.createInterface(createReadStream(filePath));
 
-  let data: string[] = new Array();
+  const data: string[] = new Array();
   await reader.on('line', (l: string) => {
     if (!l.startsWith('#') || l.length !== 0) {
       data.push(l);

@@ -1,12 +1,12 @@
-import * as io from './io';
-import * as jsonc from 'jsonc-parser';
 import { writeFileSync } from 'fs';
+import * as jsonc from 'jsonc-parser';
+import * as io from './io';
 import * as UI from './ui';
 
 export function getConfig(filePath: string): JSON {
   UI.Output.log(`getConfig('${filePath}')`);
   try {
-    let data = io.getFile(filePath);
+    const data = io.getFile(filePath);
     if (data.length === 0) {
       return JSON.parse('{}');
     } else {
@@ -24,7 +24,6 @@ export function getConfig(filePath: string): JSON {
 export function stringify(data): string {
   return JSON.stringify(data, null, 2);
 }
-
 
 /**
  * Writes a json file to disk.
