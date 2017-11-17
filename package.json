@@ -43,13 +43,14 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:teamEssentials.changeWindowsShell",
+        "onCommand:teamEssentials.selectShell",
         "onCommand:teamEssentials.filterExplorer",
         "onCommand:teamEssentials.updateExtensions",
-        "onCommand:teamEssentials.applyDefaultSettings",
+        "onCommand:teamEssentials.applyTeamSettings",
+        "onCommand:teamEssentials.configWizard",
         "onDebug:teamEssentials.debugStart",
         "onCommand:teamEssentials.debugStop",
-        "workspaceContains:.vscode/team.json"
+        "workspaceContains:.vscode/team-essentials/state.json"
     ],
     "main": "./out/src/extension",
     "contributes": {
