@@ -1,6 +1,6 @@
 {
     "name": "team-essentials",
-    "displayName": "Team Essentials",
+    "displayName": "Team Essentials \u2014 Filter Explorer, Change Windows Shell, Modify Debug layouts",
     "version": "1.0.1",
     "author": "SteveHartzog",
     "publisher": "SteveHartzog",
@@ -17,39 +17,14 @@
             "description": "Twitter Share"
         },
         {
-            "url": "https://img.shields.io/twitter/follow/SteveHartzog.svg?style=social&label=Follow&style=plastic",
-            "href": "https://twitter.com/intent/follow?screen_name=SteveHartzog",
-            "description": "Twitter Follow"
-        },
-        {
-            "url": "https://img.shields.io/badge/slack-%23team--essentials-red.svg",
+            "url": "https://img.shields.io/badge/vscode--dev--community-team--essentials-red.svg?logo=slack",
             "href": "https://join.slack.com/t/vscode-dev-community/shared_invite/enQtMjIxOTgxNDE3NzM0LWU5M2ZiZDU1YjBlMzdlZjA2YjBjYzRhYTM5NTgzMTAxMjdiNWU0ZmQzYWI3MWU5N2Q1YjBiYmQ4MzY0NDE1MzY",
             "description": "Chat at https://vscode-dev-community.slack.com"
-        },
-        {
-            "url": "https://vsmarketplacebadge.apphb.com/version-short/SteveHartzog.team-essentials.svg",
-            "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
-            "description": "Version"
         },
         {
             "url": "https://img.shields.io/badge/vscode-v1.18+-373277.svg",
             "href": "https://code.visualstudio.com/updates/v1_18",
             "description": "VSCode"
-        },
-        {
-            "url": "https://vsmarketplacebadge.apphb.com/installs/SteveHartzog.team-essentials.svg",
-            "href": "https://marketplace.visualstudio.com/items?itemName=SteveHartzog.team-essentials",
-            "description": "Installs"
-        },
-        {
-            "url": "https://img.shields.io/github/issues/SteveHartzog/team-essentials.svg",
-            "href": "https://github.com/SteveHartzog/team-essentials/issues",
-            "description": "Issues"
-        },
-        {
-            "url": "https://img.shields.io/github/license/mashape/apistatus.svg",
-            "href": "https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/LICENSE",
-            "description": "License"
         }
     ],
     "repository": {
@@ -152,23 +127,19 @@
         ],
         "jsonValidation": [
             {
-                "fileMatch": "team.json",
-                "url": "./src/schemas/team.json"
-            },
-            {
-                "fileMatch": ".vscode/team/settings.json",
-                "url": "./src/schemas/settings.json"
-            },
-            {
-                "fileMatch": "extensions.json",
+                "fileMatch": ".vscode/extensions.json",
                 "url": "./src/schemas/extensions.json"
             },
             {
-                "fileMatch": ".vscode/team/debug.json",
+                "fileMatch": ".vscode/team-essentials/settings.json",
+                "url": "./src/schemas/settings.json"
+            },
+            {
+                "fileMatch": ".vscode/team-essentials/debug.json",
                 "url": "./src/schemas/debug.json"
             },
             {
-                "fileMatch": ".vscode/team/filters.json",
+                "fileMatch": ".vscode/team-essentials/filters.json",
                 "url": "./src/schemas/filters.json"
             }
         ],
