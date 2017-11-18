@@ -10,7 +10,7 @@ const folders: Folder[] = new Array();
 const ext = extensions.getExtension('SteveHartzog.team-essentials')!;
 const version = ext.packageJSON.version;
 // const changelog = 'https://marketplace.visualstudio.com/items/SteveHartzog.team-essentials/changelog';
-const releaseNotes = 'https://github.com/SteveHartzog/team-essentials/wiki/Multi-Root-Update';
+const releaseNotes = 'https://github.com/SteveHartzog/team-essentials/wiki/Release-Notes';
 
 // API Dependencies
 const controls = API.UI.Controls;
