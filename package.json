@@ -1,7 +1,7 @@
 {
     "name": "team-essentials",
     "displayName": "Team Essentials — Filter Explorer, Change Windows Shell, Modify Debug layouts",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "author": "SteveHartzog",
     "publisher": "SteveHartzog",
     "description": "Filter your explorer view (statusbar shows current filter) with customizable team-wide filters, change your integrated terminal (shell) by simply selecting it, change the window layout on debug start and stop, team settings override local workspace settings.",
@@ -43,14 +43,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:teamEssentials.selectShell",
-        "onCommand:teamEssentials.filterExplorer",
-        "onCommand:teamEssentials.updateExtensions",
-        "onCommand:teamEssentials.applyTeamSettings",
-        "onCommand:teamEssentials.configWizard",
-        "onDebug:teamEssentials.debugStart",
-        "onCommand:teamEssentials.debugStop",
-        "workspaceContains:.vscode/team-essentials/state.json"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -176,9 +169,10 @@
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
-        "compile": "npm run lint && tsc -p ./",
+        "compile": "tsc -p ./",
         "lint": "tslint --project tsconfig.json --config tslint.json --exclude **/_*",
         "watch": "tsc -watch -p ./",
+        "pack": "vsce package",
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "devDependencies": {

@@ -66,13 +66,41 @@ export function hasFilter(folderPath: string) {
 export function isNewUser() {
   const folders = workspace.workspaceFolders;
   for (const folder of folders) {
-    if (folder.uri) {
+    const legacyStatePath = join(folder.uri.fsPath, ConfigurationFiles.legacyState);
+    const statePath = join(folder.uri.fsPath, ConfigurationFiles.state);
+    if (this.confirmPath(legacyStatePath) || this.confirmPath(statePath)) {
       UI.Output.log('isNewUser(): false');
       return false;
     }
   }
   UI.Output.log('isNewUser(): true');
   return true;
+}
+
+export function getUserInfo() {
+  const folders = workspace.workspaceFolders;
+  let isNewUser = true;
+  let isLegacyUser = false;
+  let isCurrentUser = false;
+  if (folders) {
+    for (const folder of folders) {
+      const legacyStatePath = join(folder.uri.fsPath, ConfigurationFiles.legacyState);
+      const statePath = join(folder.uri.fsPath, ConfigurationFiles.state);
+      if (this.confirmPath(statePath)) {
+        isCurrentUser = true;
+        break;
+      }
+      if (this.confirmPath(legacyStatePath)) {
+        isLegacyUser = true;
+        break;
+      }
+    }
+  }
+  if (isLegacyUser || isCurrentUser) {
+    isNewUser = false;
+  }
+  UI.Output.log(`getUserInfo(): { isCurrentUser: ${isCurrentUser}, isLegacyUser: ${isLegacyUser}, isNewUser: ${isNewUser}`);
+  return { isCurrentUser, isLegacyUser, isNewUser };
 }
 
 export function isWindows() {

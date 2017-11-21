@@ -10,7 +10,7 @@ export function getConfig(filePath: string): JSON {
     if (data.length === 0) {
       return JSON.parse('{}');
     } else {
-      return jsonc.parse(data, null, { disallowComments: true });
+      return jsonc.parse(data);
     }
   } catch (error) {
     if (error instanceof Error && error['code'] === 'ENOENT') {

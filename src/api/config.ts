@@ -5,6 +5,7 @@ import { window, workspace, ConfigurationTarget, Position, Range, TextEdit, Uri,
 import * as env from './environment';
 import { isMultiRootWorkspace } from './environment';
 import { Environment } from './index';
+import * as IO from './io';
 import * as json from './json';
 import * as UI from './ui';
 
@@ -163,13 +164,23 @@ export class Configuration {
   }
 
   static getGlobal(section: string, fromWorkspace = false) {
-    const value = workspace.getConfiguration(null, env.getResource()).inspect(section);
-    if (fromWorkspace && value.workspaceValue) {
-      UI.Output.log(`getGlobal('${section}'): ${value.workspaceValue}`);
-      return value.workspaceValue;
+    if (fromWorkspace) {
+      const value = workspace.getConfiguration(null, env.getResource()).inspect(section);
+      if (value) {
+        UI.Output.log(`getGlobal('${section}'): ${value.workspaceValue}`);
+        return value.workspaceValue;
+      } else {
+        return null;
+      }
+    } else {
+      const value = workspace.getConfiguration().inspect(section);
+      if (value) {
+        UI.Output.log(`getGlobal('${section}'): ${value.globalValue}`);
+        return value.globalValue;
+      } else {
+        return null;
+      }
     }
-    UI.Output.log(`getGlobal('${section}'): ${value.globalValue}`);
-    return value.globalValue;
   }
 
   static getLogLevel(fromWorkspace = false) {
@@ -295,7 +306,7 @@ export class Configuration {
 
   static createDefaultConfigs(workspacePath: string) {
     const out = UI.Output;
-    out.info('Creating default configs.', 'running: ');
+    out.log('Creating default configs.', 'running: ');
 
     // Create _state.json, then save to .vscode/team-essentials
     const state = {
@@ -331,7 +342,12 @@ export class Configuration {
   }
 
   public static insertGitIgnoreSettings(workspacePath: string) {
-    workspace.openTextDocument(join(workspacePath, '.gitignore')).then((gitignore) => {
+    const gitignorePath = join(workspacePath, '.gitignore');
+    if (!env.confirmPath(gitignorePath)) {
+      IO.saveFile(gitignorePath, ' ');
+    }
+
+    workspace.openTextDocument(gitignorePath).then((gitignore) => {
       window.showTextDocument(gitignore, ViewColumn.One, true);
       const coords = { start: { line: gitignore.lineCount + 1, char: 0 }, end: { line: gitignore.lineCount + 5, char: 0 } };
       const edit = new WorkspaceEdit();

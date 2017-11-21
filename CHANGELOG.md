@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.0] - 2017-11-20
+
 ### Changed
 
 - Updated the location of the release notes.
+- Refactored ui.ShowChoices() & ShowMessage to await a string from an async promise, instead of using a callback.
+- Refactored welcome, activate & register methods to fix bugs with activation.
+- Refactored wizards to accommodate new UI controls and for more interaction consistency and clarity.
+- Refactored the `Change Windows Shell` feature so that it works in or out of a workspace.
+
+### Fixed
+
+- Bug in apply team extensions prevented any installations.
 
 ## [1.0.2] - 2017-11-17
 
@@ -64,7 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - `teamEssentials.statusbar.disable`: Disables the statusbar.
   - `teamEssentials.statusbar.align`: Specifies if the statusbar should be aligned 'left' or 'right'.
   - `teamEssentials.statusbar.hideIcon`: Hides the icon for the filter on the statusbar.
-  - `teamEssentials.statusbar.icon`: Set a custom icon from the octicon list @ https://octicons.github.com/.
+  - `teamEssentials.statusbar.icon`: Set a custom icon from the octicon list @ [https://octicons.github.com/](https://octicons.github.com/).
   - `teamEssentials.statusbar.priority`:Set a custom priority for the statusbar setting.
 - Added badges to `README.md`: vscode, issues, license.
 - Added social links (twitter & slack) to `README.md` header.

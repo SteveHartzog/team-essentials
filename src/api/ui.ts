@@ -1,30 +1,36 @@
 import { clone } from 'lodash';
-import { window, MessageItem as _MessageItem, OutputChannel, QuickPickItem, StatusBarAlignment, StatusBarItem, ViewColumn } from 'vscode';
+import { window, workspace, MessageItem as _MessageItem, OutputChannel, QuickPickItem, StatusBarAlignment, StatusBarItem, ViewColumn } from 'vscode';
 import { Configuration as config } from './config';
+import * as env from './environment';
 import * as misc from './misc';
 
 export enum MessageType { Error, Info, Warning }
 export class Controls {
-  public static async ShowChoices(question: string, choices: Choice[], callback: Function) {
-    const choice = await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true });
-    await callback(choice);
+  public static async ShowChoices(question: string, choices: Choice[]): Promise<string> {
+    let result = '';
+    await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true }).then((choice) => {
+      result = choice.label;
+    });
+    return result;
   }
 
-  public static ShowMessage(messageType: MessageType, message: string, items = []) {
+  public static async ShowMessage(messageType: MessageType, message: string, items = []): Promise<string> {
+    let result = '';
     switch (messageType) {
       case MessageType.Info:
         return items
-          ? window.showInformationMessage(message, ...items)
-          : window.showInformationMessage(message);
+          ? await window.showInformationMessage(message, ...items).then((choice) => result = choice)
+          : await window.showInformationMessage(message);
       case MessageType.Warning:
         return items
-          ? window.showWarningMessage(message, ...items)
+          ? window.showWarningMessage(message, ...items).then((choice) => result = choice)
           : window.showWarningMessage(message);
       case MessageType.Error:
         return items
-          ? window.showErrorMessage(message, ...items)
+          ? window.showErrorMessage(message, ...items).then((choice) => result = choice)
           : window.showErrorMessage(message);
     }
+    return result;
   }
 }
 
@@ -105,23 +111,28 @@ export enum LogLevel {
 }
 export class Output {
   private static _outputChannel: OutputChannel;
-  private static _logLevel: LogLevel = LogLevel.info;
+  private static _logLevel: LogLevel;
 
-  public static setChannel(outputChannel) {
-    this._outputChannel = outputChannel;
+  public static isInitialized() {
+    return (this._outputChannel);
   }
 
-  public static setLogLevel(logLevel: string) {
-    switch (logLevel) {
-      case LogLevel.info:
-        this._logLevel = LogLevel.info;
-        break;
+  static startChannel() {
+    this._outputChannel = window.createOutputChannel('Team Essentials');
+    this.setLogLevel();
+  }
+
+  public static setLogLevel(logLevel?: string) {
+    const level = logLevel ? logLevel : config.getGlobal('teamEssentials.logLevel', (workspace.workspaceFolders && workspace.workspaceFolders.length > 1));
+    switch (level) {
       case LogLevel.errors:
         this._logLevel = LogLevel.errors;
         break;
       case LogLevel.verbose:
         this._logLevel = LogLevel.verbose;
         break;
+      default:
+        this._logLevel = LogLevel.info;
     }
   }
 
@@ -146,9 +157,9 @@ export class Output {
     }
   }
 
-  public static log(content: string) {
-    if (this._logLevel !== LogLevel.info && this._logLevel !== LogLevel.errors) {
-      this.append(content, 'LOG: ', false, false);
+  public static log(content: string, label: string = 'LOG: ') {
+    if (this._logLevel && this._logLevel !== LogLevel.info && this._logLevel !== LogLevel.errors) {
+      this.append(content, label, false, false);
     }
   }
 

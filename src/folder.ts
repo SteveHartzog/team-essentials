@@ -18,26 +18,6 @@ const controls = API.UI.Controls;
 const Choice = API.UI.Choice;
 const MessageType = API.Enums.MessageType;
 
-enum Shell {
-  CommandPrompt = 'Command Prompt',
-  PowerShell = 'PowerShell',
-  GitBash = 'Git Bash',
-  BashOnUbuntu = 'Bash on Ubuntu',
-  Cmder = 'cmder',
-  HyperWithCmd = 'Hyper.is (cmd.exe)',
-  HyperWithBash = 'Hyper.is (bash.exe)'
-}
-
-enum ShellLocations {
-  CommandPrompt = 'C:\\Windows\\sysnative\\cmd.exe',
-  PowerShell = 'C:\\Windows\\sysnative\\WindowsPowerShell\\v1.0\\powershell.exe',
-  GitBash = 'C:\\Program Files\\Git\\bin\\bash.exe',
-  BashOnUbuntu = 'C:\\Windows\\sysnative\\bash.exe',
-  // Future support?
-  Cmder = '',
-  HyperWithCmd = 'C:\\Windows\\sysnative\\cmd.exe',
-  HyperWithBash = 'C:\\WINDOWS\\Sysnative\\bash.exe'
-}
 export class Folder {
   public name: string;
   public config;
@@ -56,11 +36,26 @@ export class Folder {
       this._isOldConfig = false;
       out.log(`Loading configuration for '${this.name}'`);
       this.config = config.load(this.path, isMultiRootWorkspace);
-      this.init();
     } else if (env.hasOldConfig(this.name, this.path)) {
       out.info(`Loading **OLD** configuration for '${this.name}'`);
       this.config = config.load(this.path, isMultiRootWorkspace, true);
-      this.init();
+    }
+
+    // Only continue init if a config was loaded;
+    if (this.config) {
+      // Apply/Reapply saved filter if it exists
+      if (this.config.state.hasOwnProperty('filter')) {
+        out.log(`Filter already applied for '${this.name}'`);
+        this._filter = this.config.state.filter;
+      }
+
+      // Apply team settings ONLY if in single-root workspace
+      if (!this.isMultiRootWorkspace) {
+        this.applyTeamSettings();
+      }
+
+      // Workspace required extensions
+      this.ensureRequiredExtensions();
     }
   }
 
@@ -124,75 +119,20 @@ export class Folder {
     }
   }
 
-  //#region Windows Shell
-  public selectShell() {
-    controls.ShowChoices('Select your Windows shell:', [
-      new Choice(Shell.CommandPrompt, 'This is the default on windows.'),
-      new Choice(Shell.PowerShell, 'Microsoft PowerShell is the new object oriented shell.'),
-      new Choice(Shell.GitBash, 'This is installed with the git-scm client.'),
-      new Choice(Shell.BashOnUbuntu, 'This is the new bash shell Microsoft released with the Windows Subsystem for Linux. ')
-    ], (choice) => {
-      let cli;
-      if (choice) {
-        switch (choice.label) {
-          case Shell.CommandPrompt:
-            cli = ShellLocations.CommandPrompt;
-            break;
-          case Shell.PowerShell:
-            cli = ShellLocations.PowerShell;
-            break;
-          case Shell.GitBash:
-            cli = ShellLocations.GitBash;
-            break;
-          case Shell.BashOnUbuntu:
-            cli = ShellLocations.BashOnUbuntu;
-            break;
-        }
-        if (cli) {
-          const workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
-          if (cli !== workspaceShell) {
-            // Save to workspace in multi-root, global if not
-            config.setGlobal('terminal.integrated.shell.windows', cli);
-            this.restartShell();
-          }
-        }
-      }
-    });
-  }
-
-  public restartShell() {
-    // only kill if it has been opened?
-    commands.executeCommand('workbench.action.terminal.focus').then(() => {
-      commands.executeCommand('workbench.action.terminal.kill').then(() => {
-        // Add a .5 sec timeout to give it a chance to ensure kill is completed
-        setTimeout(() => {
-          commands.executeCommand('workbench.action.terminal.focus');
-        }, 500);
-      });
-    });
-  }
-  //#endregion
-
   //#region Extensions
-  public ensureRequiredExtensions() {
+  public async ensureRequiredExtensions() {
     const state = clone(this.config.state);
     if (!state.hasOwnProperty('extensions') || (state.hasOwnProperty('extensions') && state['extensions'] === false)) {
       out.log(`Required extensions not installed for workspace '${this.name}'.`);
       this.installRequiredExtensions();
       state['extensions'] = true;
       config.save(this.path, ConfigurationFiles.state, state);
-      controls.ShowChoices('Restart VS Code to enable extensions?', [
-        new Choice('No', 'Your extensions will not work until you restart VS Code.'),
-        new Choice('Yes', '')
-      ], (choice) => {
-        if (choice && choice.label === 'Yes') { commands.executeCommand('workbench.action.reloadWindow'); }
-      });
     } else {
       out.log(`Required extensions have already been installed for workspace '${this.name}'.`);
     }
   }
 
-  public updateExtensions() {
+  public async updateExtensions() {
     const options = [];
     if (!isEmpty(this.config.extensions)) {
       if (this.config.extensions.hasOwnProperty('recommendations')) {
@@ -207,21 +147,18 @@ export class Folder {
       options.push(new Choice('All', 'Install both recommended and required extensions.'));
     }
     if (options.length > 0) {
-      const updateType = controls.ShowChoices('Update which extensions?', options, (updateType) => {
-        if (updateType) {
-          switch (updateType.label) {
-            case 'Required':
-              this.installRequiredExtensions();
-              break;
-            case 'Recommended':
-              this.installRecommendedExtensions();
-              break;
-            case 'All':
-              this.installRequiredExtensions();
-              this.installRecommendedExtensions();
-          }
-        }
-      });
+      const updateType = await controls.ShowChoices('Update which extensions?', options);
+      switch (updateType) {
+        case 'Required':
+          this.installRequiredExtensions();
+          break;
+        case 'Recommended':
+          this.installRecommendedExtensions();
+          break;
+        case 'All':
+          this.installRequiredExtensions();
+          this.installRecommendedExtensions();
+      }
     } else {
       out.continue('No recommended or required extensions provided for this folder.');
     }
@@ -231,6 +168,7 @@ export class Folder {
     const recommendedExtensions = clone(this.config.extensions)['recommendations'];
     out.info('Requesting recommended team extensions.', 'running: ');
     if (recommendedExtensions && recommendedExtensions.length > 0) {
+      out.show();
       this.requestInstallations(recommendedExtensions);
       out.continue('All recommended team extensions are installing.');
     }
@@ -243,6 +181,7 @@ export class Folder {
     }
     out.info('Requesting required team extensions.', 'running: ');
     if (requiredExtensions && requiredExtensions.length > 0) {
+      out.show();
       this.requestInstallations(requiredExtensions);
       out.continue('All required team extensions are installing.');
     }
@@ -270,7 +209,7 @@ export class Folder {
       this.updateStatusBar();
     }
   }
-  public filterExplorer() {
+  public async filterExplorer() {
     if (this.path) {
       // build the quickPick to get the newFilter
       let header = 'Select an explorer filter';
@@ -279,13 +218,11 @@ export class Folder {
           ? ` for the ${this.name} workspace:`
           : ':';
 
-      // Show QuickPick!
-      controls.ShowChoices(header, this.getFilterNames(), (filter) => {
-        if (filter) {
-          // Use chosen filter
-          this.filter = filter.label;
-        }
-      });
+      const chosenFilter = await controls.ShowChoices(header, this.getFilterNames());
+      if (chosenFilter) {
+        // Use chosen filter
+        this.filter = chosenFilter;
+      }
     }
   }
 
@@ -338,20 +275,4 @@ export class Folder {
     }
   }
   //#endregion
-
-  private init() {
-    // Apply/Reapply saved filter if it exists
-    if (this.config.state.hasOwnProperty('filter')) {
-      out.log(`Filter already applied for '${this.name}'`);
-      this._filter = this.config.state.filter;
-    }
-
-    // Apply team settings ONLY if in single-root workspace
-    if (!this.isMultiRootWorkspace) {
-      this.applyTeamSettings();
-    }
-
-    // Workspace required extensions
-    this.ensureRequiredExtensions();
-  }
 }
