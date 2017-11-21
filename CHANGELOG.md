@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Remove vsix used in testing
 - Fix #15 cannot read 'label' of undefined
+- Cleanup project filters
 
 ## [1.1.1] - 2017-11-21
 
