@@ -189,7 +189,7 @@ export const activate = async (context: ExtensionContext) => {
       let disableWelcome = config.getGlobal('teamEssentials.disableWelcome');
       disableWelcome = disableWelcome === undefined ? false : disableWelcome;
 
-      if (!disableWelcome) { // && currentlyInstalledVersion !== version) {
+      if (!disableWelcome && currentlyInstalledVersion !== version) {
         config.setGlobal('teamEssentials.currentVersion', version);
         userInfo.isCurrentUser = await cmd.versionWelcome(userInfo);
         userInfo.isLegacyUser = !userInfo.isCurrentUser;
