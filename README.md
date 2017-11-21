@@ -9,7 +9,7 @@
 
 ![Team Essentials](./images/team-essentials.png)
 
-<small>[2017.11.13]</small> **<font style="color:limegreen">[New]</font>** The Multi-root Update is here! See what's changed either in the [release notes](https://github.com/SteveHartzog/team-essentials/wiki/Multi-Root-Update) or for devs the [CHANGELOG](https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/CHANGELOG.md).
+<small>[2017.11.13]</small> **<font style="color:limegreen">[New]</font>** The Multi-root Update is here! See what's changed either in the [release notes](https://github.com/SteveHartzog/team-essentials/wiki/Release-Notes) or for devs the [CHANGELOG](https://raw.githubusercontent.com/SteveHartzog/team-essentials/master/CHANGELOG.md).
 
 ## Description
 Team Essentials helps you define a default environment for your team:

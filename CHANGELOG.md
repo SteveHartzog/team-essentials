@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- README.md corrected to point to overall release notes, not the original 1.0 Mult-Root Update.
+
 ## [1.1.0] - 2017-11-20
 
 ### Changed
