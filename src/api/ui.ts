@@ -9,7 +9,9 @@ export class Controls {
   public static async ShowChoices(question: string, choices: Choice[]): Promise<string> {
     let result = '';
     await window.showQuickPick(choices, { placeHolder: question, matchOnDescription: false, ignoreFocusOut: true }).then((choice) => {
-      result = choice.label;
+      if (choice) {
+        result = choice.label;
+      }
     });
     return result;
   }

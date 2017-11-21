@@ -28,32 +28,34 @@ enum ShellLocations {
 
 export async function selectShell() {
   const shell = await controls.ShowChoices('Select your Windows shell:', [
-    new Choice(Shell.CommandPrompt, 'This is the default on windows.'),
-    new Choice(Shell.PowerShell, 'Microsoft PowerShell is the new object oriented shell.'),
-    new Choice(Shell.GitBash, 'This is installed with the git-scm client.'),
-    new Choice(Shell.BashOnUbuntu, 'This is the new bash shell Microsoft released with the Windows Subsystem for Linux. ')
+    new Choice(Shell.CommandPrompt, 'Just the basics.'),
+    new Choice(Shell.PowerShell, 'Microsoft PowerShell is an object oriented shell.'),
+    new Choice(Shell.GitBash, 'Installed with the git-scm client.'),
+    new Choice(Shell.BashOnUbuntu, 'The Ubuntu Bash shell that uses the Windows Subsystem for Linux.')
   ]);
   let cli;
-  switch (shell) {
-    case Shell.CommandPrompt:
-      cli = ShellLocations.CommandPrompt;
-      break;
-    case Shell.PowerShell:
-      cli = ShellLocations.PowerShell;
-      break;
-    case Shell.GitBash:
-      cli = ShellLocations.GitBash;
-      break;
-    case Shell.BashOnUbuntu:
-      cli = ShellLocations.BashOnUbuntu;
-      break;
-  }
-  if (cli) {
-    const workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
-    if (cli !== workspaceShell) {
-      // Save to workspace in multi-root, global if not
-      config.setGlobal('terminal.integrated.shell.windows', cli);
-      _restartShell();
+  if (shell) {
+    switch (shell) {
+      case Shell.CommandPrompt:
+        cli = ShellLocations.CommandPrompt;
+        break;
+      case Shell.PowerShell:
+        cli = ShellLocations.PowerShell;
+        break;
+      case Shell.GitBash:
+        cli = ShellLocations.GitBash;
+        break;
+      case Shell.BashOnUbuntu:
+        cli = ShellLocations.BashOnUbuntu;
+        break;
+    }
+    if (cli) {
+      const workspaceShell = config.getGlobal('terminal.integrated.shell.windows');
+      if (cli !== workspaceShell) {
+        // Save to workspace in multi-root, global if not
+        config.setGlobal('terminal.integrated.shell.windows', cli);
+        _restartShell();
+      }
     }
   }
 }
